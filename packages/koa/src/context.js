@@ -5,14 +5,14 @@
  * Module dependencies.
  */
 
-const util = require('util');
-const createError = require('http-errors');
-const httpAssert = require('http-assert');
+// const util = require('util');
+// const createError = require('http-errors');
+// const httpAssert = require('http-assert');
 const delegate = require('delegates');
-const statuses = require('statuses');
-const Cookies = require('cookies');
+// const statuses = require('statuses');
+// const Cookies = require('cookies');
 
-const COOKIES = Symbol('context#cookies');
+// const COOKIES = Symbol('context#cookies');
 
 /**
  * Context prototype.
@@ -47,13 +47,13 @@ const proto = module.exports = {
 
   toJSON() {
     return {
-      request: this.request.toJSON(),
-      response: this.response.toJSON(),
-      app: this.app.toJSON(),
-      originalUrl: this.originalUrl,
-      req: '<original node req>',
-      res: '<original node res>',
-      socket: '<original node socket>'
+      // request: this.request.toJSON(),
+      // response: this.response.toJSON(),
+      // app: this.app.toJSON(),
+      // originalUrl: this.originalUrl,
+      // req: '<original node req>',
+      // res: '<original node res>',
+      // socket: '<original node socket>'
     };
   },
 
@@ -70,7 +70,7 @@ const proto = module.exports = {
    * @api public
    */
 
-  assert: httpAssert,
+  // assert: httpAssert,
 
   /**
    * Throw an error with `status` (default 500) and
@@ -93,9 +93,9 @@ const proto = module.exports = {
    * @api public
    */
 
-  throw(...args) {
-    throw createError(...args);
-  },
+  // throw(...args) {
+  //   throw createError(...args);
+  // },
 
   /**
    * Default error handling.
@@ -116,7 +116,8 @@ const proto = module.exports = {
     const isNativeError =
       Object.prototype.toString.call(err) === '[object Error]' ||
       err instanceof Error;
-    if (!isNativeError) err = new Error(util.format('non-error thrown: %j', err));
+    // if (!isNativeError) err = new Error(util.format('non-error thrown: %j', err));
+    if (!isNativeError) err = new Error('non-error thrown: %j');
 
     let headerSent = false;
     if (this.headerSent || !this.writable) {
@@ -155,29 +156,31 @@ const proto = module.exports = {
     if ('ENOENT' === err.code) statusCode = 404;
 
     // default to 500
-    if ('number' !== typeof statusCode || !statuses[statusCode]) statusCode = 500;
+    // if ('number' !== typeof statusCode || !statuses[statusCode]) statusCode = 500;
+    if ('number' !== typeof statusCode) statusCode = 500;
 
     // respond
-    const code = statuses[statusCode];
+    // const code = statuses[statusCode];
+    const code = statusCode;
     const msg = err.expose ? err.message : code;
     this.status = err.status = statusCode;
     this.length = Buffer.byteLength(msg);
     res.end(msg);
   },
 
-  get cookies() {
-    if (!this[COOKIES]) {
-      this[COOKIES] = new Cookies(this.req, this.res, {
-        keys: this.app.keys,
-        secure: this.request.secure
-      });
-    }
-    return this[COOKIES];
-  },
+  // get cookies() {
+  //   if (!this[COOKIES]) {
+  //     this[COOKIES] = new Cookies(this.req, this.res, {
+  //       keys: this.app.keys,
+  //       secure: this.request.secure
+  //     });
+  //   }
+  //   return this[COOKIES];
+  // },
 
-  set cookies(_cookies) {
-    this[COOKIES] = _cookies;
-  }
+  // set cookies(_cookies) {
+  //   this[COOKIES] = _cookies;
+  // }
 };
 
 /**
@@ -188,9 +191,9 @@ const proto = module.exports = {
  */
 
 /* istanbul ignore else */
-if (util.inspect.custom) {
-  module.exports[util.inspect.custom] = module.exports.inspect;
-}
+// if (util.inspect.custom) {
+//   module.exports[util.inspect.custom] = module.exports.inspect;
+// }
 
 /**
  * Response delegation.
