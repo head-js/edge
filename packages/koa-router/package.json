@@ -1,0 +1,25 @@
+{
+  "name": "@head/edge-koa-router",
+  "version": "10.1.1",
+  "description": "@head/edge-koa-router",
+  "repository": "koajs/router",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup --config rollupfile.js"
+  },
+  "dependencies": {
+    "debug": "4.3.3",
+    "http-errors": "1.8.1",
+    "path-to-regexp": "6.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "@babel/preset-react": "7.0.0",
+    "rollup": "1.12.5",
+    "rollup-plugin-babel": "4.4.0",
+    "rollup-plugin-commonjs": "10.1.0",
+    "rollup-plugin-eslint": "6.0.0",
+    "rollup-plugin-node-resolve": "5.2.0"
+  }
+}
