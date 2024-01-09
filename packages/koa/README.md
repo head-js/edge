@@ -25,9 +25,14 @@ async function init() {
 }
 ```
 
-
-[Koa](https://github.com/koajs/koa)
+[delegates @1.0.0 / 2015-12-14](https://github.com/tj/node-delegates)
 --
 
-[Koa Router](https://github.com/koajs/router)
+[Koa Compose @4.1.0 / 2018-05-22](https://github.com/koajs/compose)
+--
+
+[Koa @2.13.4 / 2021-10-19](https://github.com/koajs/koa)
+--
+
+[Koa Router @10.1.1 / 2021-08-23](https://github.com/koajs/router)
 --

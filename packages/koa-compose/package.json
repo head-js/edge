@@ -1,7 +1,11 @@
 {
   "name": "koa-compose",
+  "version": "4.1.0 / 2018-05-22",
   "description": "compose Koa middleware",
-  "version": "4.2.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup --config rollupfile.js"
+  },
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.4.5",
@@ -12,9 +16,5 @@
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-eslint": "6.0.0",
     "rollup-plugin-node-resolve": "5.2.0"
-  },
-  "scripts": {
-    "build": "rollup --config rollupfile.js"
-  },
-  "license": "MIT"
+  }
 }

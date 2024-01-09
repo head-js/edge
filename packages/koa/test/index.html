@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@head/edge test</title>
+</head>
+<body>
+  <h1>@head/edge test</h1>
+
+  <script>
+    const module = {
+      exports: {},
+    };
+    const process = {
+      env: {},
+    };
+  </script>
+  <script src="../dist/application.js"></script>
+  <script src="./spec.js"></script>
+</body>
+</html>

@@ -6,10 +6,6 @@
 
 module.exports = compose
 
-function flatten (arr) {
-  return arr.reduce((acc, next) => acc.concat(Array.isArray(next) ? flatten(next) : next), [])
-}
-
 /**
  * Compose `middleware` returning
  * a fully valid middleware comprised
@@ -22,7 +18,6 @@ function flatten (arr) {
 
 function compose (middleware) {
   if (!Array.isArray(middleware)) throw new TypeError('Middleware stack must be an array!')
-  middleware = flatten(middleware)
   for (const fn of middleware) {
     if (typeof fn !== 'function') throw new TypeError('Middleware must be composed of functions!')
   }
@@ -44,7 +39,7 @@ function compose (middleware) {
       if (i === middleware.length) fn = next
       if (!fn) return Promise.resolve()
       try {
-        return Promise.resolve(fn(context, dispatch.bind(null, i + 1)));
+        return Promise.resolve(fn(context, dispatch.bind(null, i + 1)))
       } catch (err) {
         return Promise.reject(err)
       }

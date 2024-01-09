@@ -210,15 +210,15 @@ Layer.prototype.param = function (param, fn) {
  * @private
  */
 
-Layer.prototype.setPrefix = function (prefix) {
-  if (this.path) {
-    this.path = (this.path !== '/' || this.opts.strict === true) ? `${prefix}${this.path}` : prefix
-    this.paramNames = [];
-    this.regexp = pathToRegexp(this.path, this.paramNames, this.opts);
-  }
+// Layer.prototype.setPrefix = function (prefix) {
+//   if (this.path) {
+//     this.path = (this.path !== '/' || this.opts.strict === true) ? `${prefix}${this.path}` : prefix
+//     this.paramNames = [];
+//     this.regexp = pathToRegexp(this.path, this.paramNames, this.opts);
+//   }
 
-  return this;
-};
+//   return this;
+// };
 
 /**
  * Safe decodeURIComponent, won't throw any error.

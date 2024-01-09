@@ -52,10 +52,10 @@ module.exports = class Application {
   constructor(options) {
     // super();
     options = options || {};
-  //   this.proxy = options.proxy || false;
-  //   this.subdomainOffset = options.subdomainOffset || 2;
-  //   this.proxyIpHeader = options.proxyIpHeader || 'X-Forwarded-For';
-  //   this.maxIpsCount = options.maxIpsCount || 0;
+    // this.proxy = options.proxy || false;
+    // this.subdomainOffset = options.subdomainOffset || 2;
+    // this.proxyIpHeader = options.proxyIpHeader || 'X-Forwarded-For';
+    // this.maxIpsCount = options.maxIpsCount || 0;
     this.env = options.env || process.env.NODE_ENV || 'development';
     if (options.keys) this.keys = options.keys;
     this.middleware = [];
@@ -63,10 +63,10 @@ module.exports = class Application {
     this.request = Object.create(request);
     this.response = Object.create(response);
     // util.inspect.custom support for node 6+
-  //   /* istanbul ignore else */
-  //   if (util.inspect.custom) {
-  //     this[util.inspect.custom] = this.inspect;
-  //   }
+    /* istanbul ignore else */
+    // if (util.inspect.custom) {
+    //   this[util.inspect.custom] = this.inspect;
+    // }
 
     this.router = new Router();
     this.use(this.router.routes());
@@ -85,11 +85,9 @@ module.exports = class Application {
    */
 
   listen(...args) {
-    // console.log(args);
     // debug('listen');
     // const server = http.createServer(this.callback());
     // return server.listen(...args);
-
     const handleRequest = this.callback();
 
     this.client = new Client({ handleRequest });
@@ -134,13 +132,13 @@ module.exports = class Application {
 
   use(fn) {
     if (typeof fn !== 'function') throw new TypeError('middleware must be a function!');
-    // if (isGeneratorFunction(fn)) {
-    //   deprecate('Support for generators will be removed in v3. ' +
-    //             'See the documentation for examples of how to convert old middleware ' +
-    //             'https://github.com/koajs/koa/blob/master/docs/migration.md');
-    //   fn = convert(fn);
-    // }
-    // debug('use %s', fn._name || fn.name || '-');
+  //   if (isGeneratorFunction(fn)) {
+  //     deprecate('Support for generators will be removed in v3. ' +
+  //               'See the documentation for examples of how to convert old middleware ' +
+  //               'https://github.com/koajs/koa/blob/master/docs/migration.md');
+  //     fn = convert(fn);
+  //   }
+  //   debug('use %s', fn._name || fn.name || '-');
     this.middleware.push(fn);
     return this;
   }
@@ -174,12 +172,11 @@ module.exports = class Application {
 
   handleRequest(ctx, fnMiddleware) {
     const res = ctx.res;
-    // res.statusCode = 404;
-  //   const onerror = err => ctx.onerror(err);
+    res.statusCode = 404;
+    const onerror = err => ctx.onerror(err);
     const handleResponse = () => respond(ctx);
-  //   onFinished(res, onerror);
-    // return fnMiddleware(ctx).then(handleResponse).catch(onerror);
-    return fnMiddleware(ctx).then(handleResponse);
+    // onFinished(res, onerror);
+    return fnMiddleware(ctx).then(handleResponse).catch(onerror);
   }
 
   /**
@@ -195,10 +192,10 @@ module.exports = class Application {
     context.app = request.app = response.app = this;
     context.req = request.req = response.req = req;
     context.res = request.res = response.res = res;
-  //   request.ctx = response.ctx = context;
-  //   request.response = response;
-  //   response.request = request;
-  //   context.originalUrl = request.originalUrl = req.url;
+    // request.ctx = response.ctx = context;
+    // request.response = response;
+    // response.request = request;
+    // context.originalUrl = request.originalUrl = req.url;
     context.state = {};
     return context;
   }
@@ -211,19 +208,19 @@ module.exports = class Application {
    */
 
   onerror(err) {
-  //   // When dealing with cross-globals a normal `instanceof` check doesn't work properly.
-  //   // See https://github.com/koajs/koa/issues/1466
-  //   // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
-  //   const isNativeError =
-  //     Object.prototype.toString.call(err) === '[object Error]' ||
-  //     err instanceof Error;
-  //   if (!isNativeError) throw new TypeError(util.format('non-error thrown: %j', err));
+    // When dealing with cross-globals a normal `instanceof` check doesn't work properly.
+    // See https://github.com/koajs/koa/issues/1466
+    // We can probably remove it once jest fixes https://github.com/facebook/jest/issues/2549.
+    const isNativeError =
+      Object.prototype.toString.call(err) === '[object Error]' ||
+      err instanceof Error;
+    if (!isNativeError) throw new TypeError(console.error(`non-error thrown: ${err}`));
 
-  //   if (404 === err.status || err.expose) return;
-  //   if (this.silent) return;
+    if (404 === err.status || err.expose) return;
+    if (this.silent) return;
 
-  //   const msg = err.stack || err.toString();
-  //   console.error(`\n${msg.replace(/^/gm, '  ')}\n`);
+    const msg = err.stack || err.toString();
+    console.error(`${msg.replace(/^/gm, '  ')}`);
   }
 
   /**
@@ -266,27 +263,28 @@ function respond(ctx) {
   // }
 
   // status body
-  // if (null == body) {
-  //   if (ctx.response._explicitNullBody) {
-  //     ctx.response.remove('Content-Type');
-  //     ctx.response.remove('Transfer-Encoding');
-  //     return res.end();
-  //   }
-  //   if (ctx.req.httpVersionMajor >= 2) {
-  //     body = String(code);
-  //   } else {
-  //     body = ctx.message || String(code);
-  //   }
-  //   if (!res.headersSent) {
-  //     ctx.type = 'text';
-  //     ctx.length = Buffer.byteLength(body);
-  //   }
-  //   return res.end(body);
-  // }
+  if (null == body) {
+    // if (ctx.response._explicitNullBody) {
+    //   ctx.response.remove('Content-Type');
+    //   ctx.response.remove('Transfer-Encoding');
+    //   return res.end();
+    // }
+    // if (ctx.req.httpVersionMajor >= 2) {
+    //   body = String(code);
+    // } else {
+    //   body = ctx.message || String(code);
+    // }
+    // if (!res.headersSent) {
+    //   ctx.type = 'text';
+    //   ctx.length = Buffer.byteLength(body);
+    // }
+    // return res.end(body);
+    ctx.throw(res.statusCode);
+  }
 
   // responses
   // if (Buffer.isBuffer(body)) return res.end(body);
-  // if ('string' === typeof body) return res.end(body);
+  if ('string' === typeof body) return res.end(body);
   // if (body instanceof Stream) return body.pipe(res);
 
   // body: json
@@ -294,6 +292,7 @@ function respond(ctx) {
   // if (!res.headersSent) {
   //   ctx.length = Buffer.byteLength(body);
   // }
+  // res.end(body);
   return res.end(body);
 }
 
