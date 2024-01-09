@@ -170,11 +170,12 @@ module.exports = {
    * @api public
    */
 
-  // get query() {
-  //   const str = this.querystring;
-  //   const c = this._querycache = this._querycache || {};
-  //   return c[str] || (c[str] = qs.parse(str));
-  // },
+  get query() {
+    // const str = this.querystring;
+    // const c = this._querycache = this._querycache || {};
+    // return c[str] || (c[str] = qs.parse(str));
+    return this.req.query;
+  },
 
   /**
    * Set query string as an object.
@@ -240,6 +241,17 @@ module.exports = {
   // set search(str) {
   //   this.querystring = str;
   // },
+
+  /**
+   * The original body from verb is already pretty
+   *
+   * @return {Object}
+   * @api public
+   */
+
+  get body() {
+    return this.req.body;
+  },
 
   /**
    * Parse the "Host" header field host

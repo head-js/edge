@@ -3,28 +3,36 @@ function Client(opts) {
 }
 
 
-Client.prototype.verb = function (method, pathname, params, body, headers) {
-  // console.log(method, pathname, params, body, headers);
-  const req = { method, pathname, params, body, headers };
-  const res = { end: (resp) => Promise.resolve(resp) };
+Client.prototype.verb = function (method, pathname, query, form, headers) {
+  // console.log(method, pathname, params, form, headers);
+  const req = {
+    method,
+    pathname,
+    query: query || {},
+    body: form || {},
+    headers: headers || {}
+  };
+  const res = {
+    end: (resp) => Promise.resolve(resp),
+  };
   return this.handleRequest(req, res);
 };
 
 
-Client.prototype.get = function(pathname, params, body, headers) {
-  return this.verb('GET', pathname, params, body, headers);
+Client.prototype.get = function(pathname, query, form, headers) {
+  return this.verb('GET', pathname, query, form, headers);
 }
 
-Client.prototype.post = function(pathname, params, body, headers) {
-  return this.verb('POST', pathname, params, body, headers);
+Client.prototype.post = function(pathname, query, form, headers) {
+  return this.verb('POST', pathname, query, form, headers);
 }
 
-Client.prototype.put = function(pathname, params, body, headers) {
-  return this.verb('PUT', pathname, params, body, headers);
+Client.prototype.put = function(pathname, query, form, headers) {
+  return this.verb('PUT', pathname, query, form, headers);
 }
 
-Client.prototype.del = function(pathname, params, body, headers) {
-  return this.verb('DELETE', pathname, params, body, headers);
+Client.prototype.del = function(pathname, query, form, headers) {
+  return this.verb('DELETE', pathname, query, form, headers);
 }
 
 
