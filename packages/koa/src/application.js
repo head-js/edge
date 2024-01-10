@@ -68,7 +68,7 @@ module.exports = class Application {
     //   this[util.inspect.custom] = this.inspect;
     // }
 
-    this.router = new Router();
+    this.router = new Router({ exclusive: true });
     this.use(this.router.routes());
 
     this.listen();

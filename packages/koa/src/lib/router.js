@@ -95,7 +95,7 @@ function lexer(str) {
                 break;
             }
             if (!name)
-                throw new TypeError("Missing parameter name at " + i);
+                throw new TypeError("Missing parameter name at ".concat(i));
             tokens.push({ type: "NAME", index: i, value: name });
             i = j;
             continue;
@@ -105,7 +105,7 @@ function lexer(str) {
             var pattern = "";
             var j = i + 1;
             if (str[j] === "?") {
-                throw new TypeError("Pattern cannot start with \"?\" at " + j);
+                throw new TypeError("Pattern cannot start with \"?\" at ".concat(j));
             }
             while (j < str.length) {
                 if (str[j] === "\\") {
@@ -122,15 +122,15 @@ function lexer(str) {
                 else if (str[j] === "(") {
                     count++;
                     if (str[j + 1] !== "?") {
-                        throw new TypeError("Capturing groups are not allowed at " + j);
+                        throw new TypeError("Capturing groups are not allowed at ".concat(j));
                     }
                 }
                 pattern += str[j++];
             }
             if (count)
-                throw new TypeError("Unbalanced pattern at " + i);
+                throw new TypeError("Unbalanced pattern at ".concat(i));
             if (!pattern)
-                throw new TypeError("Missing pattern at " + i);
+                throw new TypeError("Missing pattern at ".concat(i));
             tokens.push({ type: "PATTERN", index: i, value: pattern });
             i = j;
             continue;
@@ -147,7 +147,7 @@ function parse(str, options) {
     if (options === void 0) { options = {}; }
     var tokens = lexer(str);
     var _a = options.prefixes, prefixes = _a === void 0 ? "./" : _a;
-    var defaultPattern = "[^" + escapeString(options.delimiter || "/#?") + "]+?";
+    var defaultPattern = "[^".concat(escapeString(options.delimiter || "/#?"), "]+?");
     var result = [];
     var key = 0;
     var i = 0;
@@ -161,12 +161,11 @@ function parse(str, options) {
         if (value !== undefined)
             return value;
         var _a = tokens[i], nextType = _a.type, index = _a.index;
-        throw new TypeError("Unexpected " + nextType + " at " + index + ", expected " + type);
+        throw new TypeError("Unexpected ".concat(nextType, " at ").concat(index, ", expected ").concat(type));
     };
     var consumeText = function () {
         var result = "";
         var value;
-        // tslint:disable-next-line
         while ((value = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR"))) {
             result += value;
         }
@@ -191,7 +190,7 @@ function parse(str, options) {
                 prefix: prefix,
                 suffix: "",
                 pattern: pattern || defaultPattern,
-                modifier: tryConsume("MODIFIER") || ""
+                modifier: tryConsume("MODIFIER") || "",
             });
             continue;
         }
@@ -216,7 +215,7 @@ function parse(str, options) {
                 pattern: name_1 && !pattern_1 ? defaultPattern : pattern_1,
                 prefix: prefix,
                 suffix: suffix,
-                modifier: tryConsume("MODIFIER") || ""
+                modifier: tryConsume("MODIFIER") || "",
             });
             continue;
         }
@@ -240,7 +239,7 @@ function tokensToFunction(tokens, options) {
     // Compile all the tokens into regexps.
     var matches = tokens.map(function (token) {
         if (typeof token === "object") {
-            return new RegExp("^(?:" + token.pattern + ")$", reFlags);
+            return new RegExp("^(?:".concat(token.pattern, ")$"), reFlags);
         }
     });
     return function (data) {
@@ -256,17 +255,17 @@ function tokensToFunction(tokens, options) {
             var repeat = token.modifier === "*" || token.modifier === "+";
             if (Array.isArray(value)) {
                 if (!repeat) {
-                    throw new TypeError("Expected \"" + token.name + "\" to not repeat, but got an array");
+                    throw new TypeError("Expected \"".concat(token.name, "\" to not repeat, but got an array"));
                 }
                 if (value.length === 0) {
                     if (optional)
                         continue;
-                    throw new TypeError("Expected \"" + token.name + "\" to not be empty");
+                    throw new TypeError("Expected \"".concat(token.name, "\" to not be empty"));
                 }
                 for (var j = 0; j < value.length; j++) {
                     var segment = encode(value[j], token);
                     if (validate && !matches[i].test(segment)) {
-                        throw new TypeError("Expected all \"" + token.name + "\" to match \"" + token.pattern + "\", but got \"" + segment + "\"");
+                        throw new TypeError("Expected all \"".concat(token.name, "\" to match \"").concat(token.pattern, "\", but got \"").concat(segment, "\""));
                     }
                     path += token.prefix + segment + token.suffix;
                 }
@@ -275,7 +274,7 @@ function tokensToFunction(tokens, options) {
             if (typeof value === "string" || typeof value === "number") {
                 var segment = encode(String(value), token);
                 if (validate && !matches[i].test(segment)) {
-                    throw new TypeError("Expected \"" + token.name + "\" to match \"" + token.pattern + "\", but got \"" + segment + "\"");
+                    throw new TypeError("Expected \"".concat(token.name, "\" to match \"").concat(token.pattern, "\", but got \"").concat(segment, "\""));
                 }
                 path += token.prefix + segment + token.suffix;
                 continue;
@@ -283,7 +282,7 @@ function tokensToFunction(tokens, options) {
             if (optional)
                 continue;
             var typeOfMessage = repeat ? "an array" : "a string";
-            throw new TypeError("Expected \"" + token.name + "\" to be " + typeOfMessage);
+            throw new TypeError("Expected \"".concat(token.name, "\" to be ").concat(typeOfMessage));
         }
         return path;
     };
@@ -309,7 +308,6 @@ function regexpToFunction(re, keys, options) {
         var path = m[0], index = m.index;
         var params = Object.create(null);
         var _loop_1 = function (i) {
-            // tslint:disable-next-line
             if (m[i] === undefined)
                 return "continue";
             var key = keys[i - 1];
@@ -356,7 +354,7 @@ function regexpToRegexp(path, keys) {
             prefix: "",
             suffix: "",
             modifier: "",
-            pattern: ""
+            pattern: "",
         });
         execResult = groupsRegex.exec(path.source);
     }
@@ -367,7 +365,7 @@ function regexpToRegexp(path, keys) {
  */
 function arrayToRegexp(paths, keys, options) {
     var parts = paths.map(function (path) { return pathToRegexp(path, keys, options).source; });
-    return new RegExp("(?:" + parts.join("|") + ")", flags(options));
+    return new RegExp("(?:".concat(parts.join("|"), ")"), flags(options));
 }
 /**
  * Create a path regexp from string input.
@@ -380,9 +378,9 @@ function stringToRegexp(path, keys, options) {
  */
 function tokensToRegexp(tokens, keys, options) {
     if (options === void 0) { options = {}; }
-    var _a = options.strict, strict = _a === void 0 ? false : _a, _b = options.start, start = _b === void 0 ? true : _b, _c = options.end, end = _c === void 0 ? true : _c, _d = options.encode, encode = _d === void 0 ? function (x) { return x; } : _d;
-    var endsWith = "[" + escapeString(options.endsWith || "") + "]|$";
-    var delimiter = "[" + escapeString(options.delimiter || "/#?") + "]";
+    var _a = options.strict, strict = _a === void 0 ? false : _a, _b = options.start, start = _b === void 0 ? true : _b, _c = options.end, end = _c === void 0 ? true : _c, _d = options.encode, encode = _d === void 0 ? function (x) { return x; } : _d, _e = options.delimiter, delimiter = _e === void 0 ? "/#?" : _e, _f = options.endsWith, endsWith = _f === void 0 ? "" : _f;
+    var endsWithRe = "[".concat(escapeString(endsWith), "]|$");
+    var delimiterRe = "[".concat(escapeString(delimiter), "]");
     var route = start ? "^" : "";
     // Iterate over the tokens and create our regexp string.
     for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
@@ -399,37 +397,41 @@ function tokensToRegexp(tokens, keys, options) {
                 if (prefix || suffix) {
                     if (token.modifier === "+" || token.modifier === "*") {
                         var mod = token.modifier === "*" ? "?" : "";
-                        route += "(?:" + prefix + "((?:" + token.pattern + ")(?:" + suffix + prefix + "(?:" + token.pattern + "))*)" + suffix + ")" + mod;
+                        route += "(?:".concat(prefix, "((?:").concat(token.pattern, ")(?:").concat(suffix).concat(prefix, "(?:").concat(token.pattern, "))*)").concat(suffix, ")").concat(mod);
                     }
                     else {
-                        route += "(?:" + prefix + "(" + token.pattern + ")" + suffix + ")" + token.modifier;
+                        route += "(?:".concat(prefix, "(").concat(token.pattern, ")").concat(suffix, ")").concat(token.modifier);
                     }
                 }
                 else {
-                    route += "(" + token.pattern + ")" + token.modifier;
+                    if (token.modifier === "+" || token.modifier === "*") {
+                        route += "((?:".concat(token.pattern, ")").concat(token.modifier, ")");
+                    }
+                    else {
+                        route += "(".concat(token.pattern, ")").concat(token.modifier);
+                    }
                 }
             }
             else {
-                route += "(?:" + prefix + suffix + ")" + token.modifier;
+                route += "(?:".concat(prefix).concat(suffix, ")").concat(token.modifier);
             }
         }
     }
     if (end) {
         if (!strict)
-            route += delimiter + "?";
-        route += !options.endsWith ? "$" : "(?=" + endsWith + ")";
+            route += "".concat(delimiterRe, "?");
+        route += !options.endsWith ? "$" : "(?=".concat(endsWithRe, ")");
     }
     else {
         var endToken = tokens[tokens.length - 1];
         var isEndDelimited = typeof endToken === "string"
-            ? delimiter.indexOf(endToken[endToken.length - 1]) > -1
-            : // tslint:disable-next-line
-                endToken === undefined;
+            ? delimiterRe.indexOf(endToken[endToken.length - 1]) > -1
+            : endToken === undefined;
         if (!strict) {
-            route += "(?:" + delimiter + "(?=" + endsWith + "))?";
+            route += "(?:".concat(delimiterRe, "(?=").concat(endsWithRe, "))?");
         }
         if (!isEndDelimited) {
-            route += "(?=" + delimiter + "|" + endsWith + ")";
+            route += "(?=".concat(delimiterRe, "|").concat(endsWithRe, ")");
         }
     }
     return new RegExp(route, flags(options));
@@ -482,14 +484,14 @@ var layer = Layer;
  * @private
  */
 
-function Layer(path, methods, middleware, opts) {
-  this.opts = opts || {};
+function Layer(path, methods, middleware, opts = {}) {
+  this.opts = opts;
   this.name = this.opts.name || null;
   this.methods = [];
   this.paramNames = [];
   this.stack = Array.isArray(middleware) ? middleware : [middleware];
-  for (let i = 0; i < methods.length; i++) {
-    const l = this.methods.push(methods[i].toUpperCase());
+  for (const method of methods) {
+    const l = this.methods.push(method.toUpperCase());
     if (this.methods[l - 1] === 'GET') this.methods.unshift('HEAD');
   }
 
@@ -520,17 +522,16 @@ Layer.prototype.match = function (path) {
  *
  * @param {String} path
  * @param {Array.<String>} captures
- * @param {Object=} existingParams
+ * @param {Object=} params
  * @returns {Object}
  * @private
  */
 
-Layer.prototype.params = function (path, captures, existingParams) {
-  const params = existingParams || {};
+Layer.prototype.params = function (path, captures, params = {}) {
   for (let len = captures.length, i = 0; i < len; i++) {
     if (this.paramNames[i]) {
       const c = captures[i];
-      if (c && c.length !== 0) params[this.paramNames[i].name] = c ? safeDecodeURIComponent(c) : c;
+      if (c && c.length > 0) params[this.paramNames[i].name] = c ? safeDecodeURIComponent(c) : c;
     }
   }
   return params;
@@ -568,11 +569,11 @@ Layer.prototype.captures = function (path) {
 //   let args = params;
 //   const url = this.path.replace(/\(\.\*\)/g, '');
 
-//   if (typeof params != 'object') {
+//   if (typeof params !== 'object') {
 //     args = Array.prototype.slice.call(arguments);
-//     if (typeof args[args.length - 1] == 'object') {
+//     if (typeof args[args.length - 1] === 'object') {
 //       options = args[args.length - 1];
-//       args = args.slice(0, args.length - 1);
+//       args = args.slice(0, -1);
 //     }
 //   }
 
@@ -582,11 +583,11 @@ Layer.prototype.captures = function (path) {
 //   const tokens = parse(url);
 //   let replace = {};
 
-//   if (args instanceof Array) {
+//   if (Array.isArray(args)) {
 //     for (let len = tokens.length, i = 0, j = 0; i < len; i++) {
 //       if (tokens[i].name) replace[tokens[i].name] = args[j++];
 //     }
-//   } else if (tokens.some(token => token.name)) {
+//   } else if (tokens.some((token) => token.name)) {
 //     replace = params;
 //   } else if (!options) {
 //     options = params;
@@ -602,6 +603,7 @@ Layer.prototype.captures = function (path) {
 //       replaced.search = undefined;
 //       replaced.query = options.query;
 //     }
+//
 //     return formatUrl(replaced);
 //   }
 
@@ -617,7 +619,7 @@ Layer.prototype.captures = function (path) {
  * router
  *   .param('user', function (id, ctx, next) {
  *     ctx.user = users[id];
- *     if (!user) return ctx.status = 404;
+ *     if (!ctx.user) return ctx.status = 404;
  *     next();
  *   })
  *   .get('/users/:user', function (ctx, next) {
@@ -632,7 +634,9 @@ Layer.prototype.captures = function (path) {
  */
 
 Layer.prototype.param = function (param, fn) {
-  const stack = this.stack;
+  const {
+    stack
+  } = this;
   const params = this.paramNames;
   const middleware = function (ctx, next) {
     return fn.call(this, ctx.params[param], ctx, next);
@@ -667,11 +671,14 @@ Layer.prototype.param = function (param, fn) {
 
 // Layer.prototype.setPrefix = function (prefix) {
 //   if (this.path) {
-//     this.path = (this.path !== '/' || this.opts.strict === true) ? `${prefix}${this.path}` : prefix
+//     this.path =
+//       this.path !== '/' || this.opts.strict === true
+//         ? `${prefix}${this.path}`
+//         : prefix;
 //     this.paramNames = [];
 //     this.regexp = pathToRegexp(this.path, this.paramNames, this.opts);
 //   }
-
+//
 //   return this;
 // };
 
@@ -687,7 +694,7 @@ Layer.prototype.param = function (param, fn) {
 function safeDecodeURIComponent(text) {
   try {
     return decodeURIComponent(text);
-  } catch (e) {
+  } catch {
     return text;
   }
 }
@@ -699,11 +706,13 @@ function safeDecodeURIComponent(text) {
  * @link https://github.com/alexmingoia/koa-router
  */
 
-//  const debug = require('debug')('koa-router');
+// const { debuglog } = require('util');
 
-//  const HttpError = require('http-errors');
+// const HttpError = require('http-errors');
 
-//  const { pathToRegexp } = require('path-to-regexp');
+// const { pathToRegexp } = require('path-to-regexp');
+
+// const debug = debuglog('koa-router');
 
 /**
  * @module koa-router
@@ -736,16 +745,20 @@ var router = Router;
  *
  * @alias module:koa-router
  * @param {Object=} opts
+ * @param {Boolean=false} opts.exclusive only run last matched route's controller when there are multiple matches
  * @param {String=} opts.prefix prefix router paths
+ * @param {String|RegExp=} opts.host host for router match
  * @constructor
  */
 
-function Router(opts) {
+function Router(opts = {}) {
   if (!(this instanceof Router)) return new Router(opts);
-  this.opts = opts || {};
+  this.opts = opts;
   this.methods = this.opts.methods || ['HEAD', 'OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', 'DELETE'];
+  this.exclusive = Boolean(this.opts.exclusive);
   this.params = {};
   this.stack = [];
+  this.host = this.opts.host;
 }
 
 /**
@@ -755,7 +768,7 @@ function Router(opts) {
  * Match URL patterns to callback functions or controller actions using `router.verb()`,
  * where **verb** is one of the HTTP verbs such as `router.get()` or `router.post()`.
  *
- * Additionaly, `router.all()` can be used to match against all methods.
+ * Additionally, `router.all()` can be used to match against all methods.
  *
  * ```javascript
  * router
@@ -861,6 +874,24 @@ function Router(opts) {
  * The [path-to-regexp](https://github.com/pillarjs/path-to-regexp) module is
  * used to convert paths to regular expressions.
  *
+ *
+ * ### Match host for each router instance
+ *
+ * ```javascript
+ * const router = new Router({
+ *    host: 'example.domain' // only match if request host exactly equal `example.domain`
+ * });
+ *
+ * ```
+ *
+ * OR host cloud be a regexp
+ *
+ * ```javascript
+ * const router = new Router({
+ *     host: /.*\.?example\.domain$/ // all host end with .example.domain would be matched
+ * });
+ * ```
+ *
  * @name get|put|post|patch|delete|del
  * @memberof module:koa-router.prototype
  * @param {String} path
@@ -871,24 +902,28 @@ function Router(opts) {
 
 function setMethodVerb(method) {
   Router.prototype[method] = function (name, path, middleware) {
-    if (typeof path === "string" || path instanceof RegExp) {
+    if (typeof path === 'string' || path instanceof RegExp) {
       middleware = Array.prototype.slice.call(arguments, 2);
     } else {
       middleware = Array.prototype.slice.call(arguments, 1);
       path = name;
       name = null;
     }
+
+    // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
+    if (typeof path !== 'string' && !(path instanceof RegExp) && (!Array.isArray(path) || path.length === 0)) throw new Error(`You have to provide a path when adding a ${method} handler`);
     this.register(path, [method], middleware, {
-      name: name
+      name
     });
     return this;
   };
 }
-for (let i = 0; i < methods.length; i++) {
-  setMethodVerb(methods[i]);
+for (const method_ of methods) {
+  setMethodVerb(method_);
 }
 
 // Alias for `router.delete()` because delete is a reserved word
+// eslint-disable-next-line dot-notation
 Router.prototype.del = Router.prototype['delete'];
 
 // @head/edge
@@ -931,59 +966,64 @@ Router.prototype.verb = function (method, pathToMath, action) {
 //   const router = this;
 //   const middleware = Array.prototype.slice.call(arguments);
 //   let path;
-
+//
 //   // support array of paths
 //   if (Array.isArray(middleware[0]) && typeof middleware[0][0] === 'string') {
-//     let arrPaths = middleware[0];
-//     for (let i = 0; i < arrPaths.length; i++) {
-//       const p = arrPaths[i];
+//     const arrPaths = middleware[0];
+//     for (const p of arrPaths) {
 //       router.use.apply(router, [p].concat(middleware.slice(1)));
 //     }
-
+//
 //     return this;
 //   }
-
+//
 //   const hasPath = typeof middleware[0] === 'string';
 //   if (hasPath) path = middleware.shift();
-
-//   for (let i = 0; i < middleware.length; i++) {
-//     const m = middleware[i];
+//
+//   for (const m of middleware) {
 //     if (m.router) {
-//       const cloneRouter = Object.assign(Object.create(Router.prototype), m.router, {
-//         stack: m.router.stack.slice(0)
-//       });
-
+//       const cloneRouter = Object.assign(
+//         Object.create(Router.prototype),
+//         m.router,
+//         {
+//           stack: [...m.router.stack]
+//         }
+//       );
+//
 //       for (let j = 0; j < cloneRouter.stack.length; j++) {
 //         const nestedLayer = cloneRouter.stack[j];
 //         const cloneLayer = Object.assign(
 //           Object.create(Layer.prototype),
 //           nestedLayer
 //         );
-
+//
 //         if (path) cloneLayer.setPrefix(path);
 //         if (router.opts.prefix) cloneLayer.setPrefix(router.opts.prefix);
 //         router.stack.push(cloneLayer);
 //         cloneRouter.stack[j] = cloneLayer;
 //       }
-
+//
 //       if (router.params) {
 //         function setRouterParams(paramArr) {
 //           const routerParams = paramArr;
-//           for (let j = 0; j < routerParams.length; j++) {
-//             const key = routerParams[j];
+//           for (const key of routerParams) {
 //             cloneRouter.param(key, router.params[key]);
 //           }
 //         }
+//
 //         setRouterParams(Object.keys(router.params));
 //       }
 //     } else {
 //       const keys = [];
 //       pathToRegexp(router.opts.prefix || '', keys);
 //       const routerPrefixHasParam = router.opts.prefix && keys.length;
-//       router.register(path || '([^\/]*)', [], m, { end: false, ignoreCaptures: !hasPath && !routerPrefixHasParam });
+//       router.register(path || '([^/]*)', [], m, {
+//         end: false,
+//         ignoreCaptures: !hasPath && !routerPrefixHasParam
+//       });
 //     }
 //   }
-
+//
 //   return this;
 // };
 
@@ -1021,8 +1061,14 @@ Router.prototype.verb = function (method, pathToMath, action) {
 
 Router.prototype.routes = Router.prototype.middleware = function () {
   const router = this;
-  let dispatch = function dispatch(ctx, next) {
+  const dispatch = function dispatch(ctx, next) {
     // debug('%s %s', ctx.method, ctx.path);
+
+    // const hostMatched = router.matchHost(ctx.host);
+
+    // if (!hostMatched) {
+    //   return next();
+    // }
 
     const path = router.opts.routerPath || ctx.routerPath || ctx.path;
     const matched = router.match(path, ctx.method);
@@ -1040,9 +1086,7 @@ Router.prototype.routes = Router.prototype.middleware = function () {
     if (mostSpecificLayer.name) {
       ctx._matchedRouteName = mostSpecificLayer.name;
     }
-
-    // layerChain = matchedLayers.reduce(function(memo, layer) {
-    layerChain = [mostSpecificLayer].reduce(function (memo, layer) {
+    layerChain = (router.exclusive ? [mostSpecificLayer] : matchedLayers).reduce(function (memo, layer) {
       memo.push(function (ctx, next) {
         ctx.captures = layer.captures(path, ctx.captures);
         ctx.params = ctx.request.params = layer.params(path, ctx.captures, ctx.params);
@@ -1105,12 +1149,11 @@ Router.prototype.routes = Router.prototype.middleware = function () {
  * @returns {Function}
  */
 
-// Router.prototype.allowedMethods = function (options) {
-//   options = options || {};
+// Router.prototype.allowedMethods = function (options = {}) {
 //   const implemented = this.methods;
 
 //   return function allowedMethods(ctx, next) {
-//     return next().then(function() {
+//     return next().then(function () {
 //       const allowed = {};
 
 //       if (!ctx.status || ctx.status === 404) {
@@ -1126,25 +1169,27 @@ Router.prototype.routes = Router.prototype.middleware = function () {
 
 //         if (!~implemented.indexOf(ctx.method)) {
 //           if (options.throw) {
-//             let notImplementedThrowable = (typeof options.notImplemented === 'function')
-//             ? options.notImplemented()  // set whatever the user returns from their function
-//             : new HttpError.NotImplemented();
+//             const notImplementedThrowable =
+//               typeof options.notImplemented === 'function'
+//                 ? options.notImplemented() // set whatever the user returns from their function
+//                 : new HttpError.NotImplemented();
 
 //             throw notImplementedThrowable;
 //           } else {
 //             ctx.status = 501;
 //             ctx.set('Allow', allowedArr.join(', '));
 //           }
-//         } else if (allowedArr.length) {
+//         } else if (allowedArr.length > 0) {
 //           if (ctx.method === 'OPTIONS') {
 //             ctx.status = 200;
 //             ctx.body = '';
 //             ctx.set('Allow', allowedArr.join(', '));
 //           } else if (!allowed[ctx.method]) {
 //             if (options.throw) {
-//               let notAllowedThrowable = (typeof options.methodNotAllowed === 'function')
-//               ? options.methodNotAllowed() // set whatever the user returns from their function
-//               : new HttpError.MethodNotAllowed();
+//               const notAllowedThrowable =
+//                 typeof options.methodNotAllowed === 'function'
+//                   ? options.methodNotAllowed() // set whatever the user returns from their function
+//                   : new HttpError.MethodNotAllowed();
 
 //               throw notAllowedThrowable;
 //             } else {
@@ -1166,7 +1211,6 @@ Router.prototype.routes = Router.prototype.middleware = function () {
  * @param {Function=} middleware You may also pass multiple middleware.
  * @param {Function} callback
  * @returns {Router}
- * @private
  */
 
 // Router.prototype.all = function (name, path, middleware) {
@@ -1177,6 +1221,14 @@ Router.prototype.routes = Router.prototype.middleware = function () {
 //     path = name;
 //     name = null;
 //   }
+
+//   // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
+//   if (
+//     typeof path !== 'string' &&
+//     !(path instanceof RegExp) &&
+//     (!Array.isArray(path) || path.length === 0)
+//   )
+//     throw new Error('You have to provide a path when adding an all handler');
 
 //   this.register(path, methods, middleware, { name });
 
@@ -1209,12 +1261,21 @@ Router.prototype.routes = Router.prototype.middleware = function () {
 
 // Router.prototype.redirect = function (source, destination, code) {
 //   // lookup source route by name
-//   if (source[0] !== '/') source = this.url(source);
+//   if (typeof source === 'symbol' || source[0] !== '/') {
+//     source = this.url(source);
+//     if (source instanceof Error) throw source;
+//   }
 
 //   // lookup destination route by name
-//   if (destination[0] !== '/' && !destination.includes('://')) destination = this.url(destination);
+//   if (
+//     typeof destination === 'symbol' ||
+//     (destination[0] !== '/' && !destination.includes('://'))
+//   ) {
+//     destination = this.url(destination);
+//     if (destination instanceof Error) throw destination;
+//   }
 
-//   return this.all(source, ctx => {
+//   return this.all(source, (ctx) => {
 //     ctx.redirect(destination);
 //     ctx.status = code || 301;
 //   });
@@ -1230,15 +1291,15 @@ Router.prototype.routes = Router.prototype.middleware = function () {
  * @private
  */
 
-Router.prototype.register = function (path, methods, middleware, opts) {
-  opts = opts || {};
+Router.prototype.register = function (path, methods, middleware, opts = {}) {
   const router = this;
-  const stack = this.stack;
+  const {
+    stack
+  } = this;
 
   // support array of paths
   if (Array.isArray(path)) {
-    for (let i = 0; i < path.length; i++) {
-      const curPath = path[i];
+    for (const curPath of path) {
       router.register.call(router, curPath, methods, middleware, opts);
     }
     return this;
@@ -1250,7 +1311,7 @@ Router.prototype.register = function (path, methods, middleware, opts) {
     name: opts.name,
     sensitive: opts.sensitive || this.opts.sensitive || false,
     strict: opts.strict || this.opts.strict || false,
-    prefix: opts.prefix || this.opts.prefix || "",
+    prefix: opts.prefix || this.opts.prefix || '',
     ignoreCaptures: opts.ignoreCaptures
   });
   if (this.opts.prefix) {
@@ -1279,7 +1340,7 @@ Router.prototype.register = function (path, methods, middleware, opts) {
 // Router.prototype.route = function (name) {
 //   const routes = this.stack;
 
-//   for (let len = routes.length, i=0; i<len; i++) {
+//   for (let len = routes.length, i = 0; i < len; i++) {
 //     if (routes[i].name && routes[i].name === name) return routes[i];
 //   }
 
@@ -1329,7 +1390,7 @@ Router.prototype.register = function (path, methods, middleware, opts) {
 //     return route.url.apply(route, args);
 //   }
 
-//   return new Error(`No route found for name: ${name}`);
+//   return new Error(`No route found for name: ${String(name)}`);
 // };
 
 /**
@@ -1355,11 +1416,12 @@ Router.prototype.match = function (path, method) {
 
     // debug('test %s %s', layer.path, layer.regexp);
 
+    // eslint-disable-next-line unicorn/prefer-regexp-test
     if (layer.match(path)) {
       matched.path.push(layer);
       if (layer.methods.length === 0 || ~layer.methods.indexOf(method)) {
         matched.pathAndMethod.push(layer);
-        if (layer.methods.length) matched.route = true;
+        if (layer.methods.length > 0) matched.route = true;
       }
     }
   }
