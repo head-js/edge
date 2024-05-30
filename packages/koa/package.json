@@ -1,6 +1,10 @@
 {
-  "name": "koa",
-  "version": "2.13.4",
+  "name": "@head/edge",
+  "version": "0.3.0",
+  "description": "@head/edge",
+  "repository": "https://github.com/head-js/edge",
+  "license": "MIT",
+  "main": "dist/application.js",
   "type": "module",
   "scripts": {
     "build": "rollup --config --strictDeprecations"
