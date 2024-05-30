@@ -1,4 +1,18 @@
 {
   "name": "koa-compose",
-  "version": "4.2.0"
+  "version": "4.2.0",
+  "scripts": {
+    "build": "rollup --config rollupfile.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "@babel/preset-react": "7.0.0",
+    "rollup": "1.12.5",
+    "rollup-plugin-babel": "4.4.0",
+    "rollup-plugin-commonjs": "10.1.0",
+    "rollup-plugin-eslint": "6.0.0",
+    "rollup-plugin-node-resolve": "5.2.0"
+  }
 }
