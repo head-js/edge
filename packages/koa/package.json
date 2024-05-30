@@ -1,19 +1,20 @@
 {
   "name": "koa",
   "version": "2.13.4",
+  "type": "module",
+  "scripts": {
+    "build": "rollup --config --strictDeprecations"
+  },
   "dependencies": {
     "delegates": "1.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-koa": "^2.0.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "gen-esm-wrapper": "^1.0.6",
-    "jest": "^27.0.6",
-    "supertest": "^3.1.0"
+    "@babel/core": "7.18.13",
+    "@babel/plugin-transform-for-of": "7.18.8",
+    "@babel/preset-env": "7.18.10",
+    "@rollup/plugin-babel": "6.0.3",
+    "@rollup/plugin-commonjs": "23.0.7",
+    "@rollup/plugin-node-resolve": "15.0.2",
+    "rollup": "3.12.1"
   }
 }
