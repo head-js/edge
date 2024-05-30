@@ -5,14 +5,14 @@
  * Module dependencies.
  */
 
-const util = require('util');
-const createError = require('http-errors');
-const httpAssert = require('http-assert');
+// const util = require('util');
+// const createError = require('http-errors');
+// const httpAssert = require('http-assert');
 const delegate = require('delegates');
-const statuses = require('statuses');
-const Cookies = require('cookies');
+// const statuses = require('statuses');
+// const Cookies = require('cookies');
 
-const COOKIES = Symbol('context#cookies');
+// const COOKIES = Symbol('context#cookies');
 
 /**
  * Context prototype.
@@ -28,10 +28,10 @@ const proto = module.exports = {
    * @api public
    */
 
-  inspect() {
-    if (this === proto) return this;
-    return this.toJSON();
-  },
+  // inspect() {
+  //   if (this === proto) return this;
+  //   return this.toJSON();
+  // },
 
   /**
    * Return JSON representation.
@@ -45,17 +45,17 @@ const proto = module.exports = {
    * @api public
    */
 
-  toJSON() {
-    return {
-      request: this.request.toJSON(),
-      response: this.response.toJSON(),
-      app: this.app.toJSON(),
-      originalUrl: this.originalUrl,
-      req: '<original node req>',
-      res: '<original node res>',
-      socket: '<original node socket>'
-    };
-  },
+  // toJSON() {
+  //   return {
+  //     request: this.request.toJSON(),
+  //     response: this.response.toJSON(),
+  //     app: this.app.toJSON(),
+  //     originalUrl: this.originalUrl,
+  //     req: '<original node req>',
+  //     res: '<original node res>',
+  //     socket: '<original node socket>'
+  //   };
+  // },
 
   /**
    * Similar to .throw(), adds assertion.
@@ -70,7 +70,7 @@ const proto = module.exports = {
    * @api public
    */
 
-  assert: httpAssert,
+  // assert: httpAssert,
 
   /**
    * Throw an error with `status` (default 500) and
@@ -93,8 +93,12 @@ const proto = module.exports = {
    * @api public
    */
 
-  throw(...args) {
-    throw createError(...args);
+  throw(status, message, extra) {
+    // throw createError(...args);
+    const err = new Error(message || status); // TODO: || statuses[status].message
+    err.status = status;
+    // TODO: extends(err, extra);
+    throw err;
   },
 
   /**
@@ -116,68 +120,79 @@ const proto = module.exports = {
     const isNativeError =
       Object.prototype.toString.call(err) === '[object Error]' ||
       err instanceof Error;
-    if (!isNativeError) err = new Error(util.format('non-error thrown: %j', err));
-
-    let headerSent = false;
-    if (this.headerSent || !this.writable) {
-      headerSent = err.headerSent = true;
+    // if (!isNativeError) err = new Error(util.format('non-error thrown: %j', err));
+    if (!isNativeError) {
+      if (err.status || err.code) {
+        // pass
+      } else {
+        err = new Error('non-error thrown: ' + err.toString());
+      }
     }
 
-    // delegate
-    this.app.emit('error', err, this);
+    throw err;
 
-    // nothing we can do here other
-    // than delegate to the app-level
-    // handler and log.
-    if (headerSent) {
-      return;
-    }
+    // let headerSent = false;
+    // if (this.headerSent || !this.writable) {
+    //   headerSent = err.headerSent = true;
+    // }
 
-    const { res } = this;
+    // // delegate
+    // this.app.emit('error', err, this);
 
-    // first unset all headers
-    /* istanbul ignore else */
-    if (typeof res.getHeaderNames === 'function') {
-      res.getHeaderNames().forEach(name => res.removeHeader(name));
-    } else {
-      res._headers = {}; // Node < 7.7
-    }
+    // // nothing we can do here other
+    // // than delegate to the app-level
+    // // handler and log.
+    // if (headerSent) {
+    //   return;
+    // }
 
-    // then set those specified
-    this.set(err.headers);
+    // const { res } = this;
 
-    // force text/plain
-    this.type = 'text';
+    // // first unset all headers
+    // /* istanbul ignore else */
+    // if (typeof res.getHeaderNames === 'function') {
+    //   res.getHeaderNames().forEach(name => res.removeHeader(name));
+    // } else {
+    //   res._headers = {}; // Node < 7.7
+    // }
 
-    let statusCode = err.status || err.statusCode;
+    // // then set those specified
+    // this.set(err.headers);
 
-    // ENOENT support
-    if ('ENOENT' === err.code) statusCode = 404;
+    // // force text/plain
+    // this.type = 'text';
 
-    // default to 500
-    if ('number' !== typeof statusCode || !statuses[statusCode]) statusCode = 500;
+    // let statusCode = err.status || err.statusCode;
 
-    // respond
-    const code = statuses[statusCode];
-    const msg = err.expose ? err.message : code;
-    this.status = err.status = statusCode;
-    this.length = Buffer.byteLength(msg);
-    res.end(msg);
+    // // ENOENT support
+    // if ('ENOENT' === err.code) statusCode = 404;
+
+    // // default to 500
+    // // if ('number' !== typeof statusCode || !statuses[statusCode]) statusCode = 500;
+    // if ('number' !== typeof statusCode) statusCode = 500;
+
+    // // respond
+    // // const code = statuses[statusCode];
+    // const code = statusCode;
+    // const msg = err.expose ? err.message : code;
+    // this.status = err.status = statusCode;
+    // this.length = Buffer.byteLength(msg);
+    // res.end(msg);
   },
 
-  get cookies() {
-    if (!this[COOKIES]) {
-      this[COOKIES] = new Cookies(this.req, this.res, {
-        keys: this.app.keys,
-        secure: this.request.secure
-      });
-    }
-    return this[COOKIES];
-  },
+  // get cookies() {
+  //   if (!this[COOKIES]) {
+  //     this[COOKIES] = new Cookies(this.req, this.res, {
+  //       keys: this.app.keys,
+  //       secure: this.request.secure
+  //     });
+  //   }
+  //   return this[COOKIES];
+  // },
 
-  set cookies(_cookies) {
-    this[COOKIES] = _cookies;
-  }
+  // set cookies(_cookies) {
+  //   this[COOKIES] = _cookies;
+  // }
 };
 
 /**
@@ -188,31 +203,31 @@ const proto = module.exports = {
  */
 
 /* istanbul ignore else */
-if (util.inspect.custom) {
-  module.exports[util.inspect.custom] = module.exports.inspect;
-}
+// if (util.inspect.custom) {
+//   module.exports[util.inspect.custom] = module.exports.inspect;
+// }
 
 /**
  * Response delegation.
  */
 
 delegate(proto, 'response')
-  .method('attachment')
-  .method('redirect')
-  .method('remove')
-  .method('vary')
-  .method('has')
-  .method('set')
-  .method('append')
-  .method('flushHeaders')
-  .access('status')
-  .access('message')
-  .access('body')
-  .access('length')
-  .access('type')
-  .access('lastModified')
-  .access('etag')
-  .getter('headerSent')
+  // .method('attachment')
+  // .method('redirect')
+  // .method('remove')
+  // .method('vary')
+  // .method('has')
+  // .method('set')
+  // .method('append')
+  // .method('flushHeaders')
+  // .access('status')
+  // .access('message')
+  // .access('body')
+  // .access('length')
+  // .access('type')
+  // .access('lastModified')
+  // .access('etag')
+  // .getter('headerSent')
   .getter('writable');
 
 /**
@@ -220,32 +235,32 @@ delegate(proto, 'response')
  */
 
 delegate(proto, 'request')
-  .method('acceptsLanguages')
-  .method('acceptsEncodings')
-  .method('acceptsCharsets')
-  .method('accepts')
-  .method('get')
-  .method('is')
-  .access('querystring')
-  .access('idempotent')
-  .access('socket')
-  .access('search')
+  // .method('acceptsLanguages')
+  // .method('acceptsEncodings')
+  // .method('acceptsCharsets')
+  // .method('accepts')
+  // .method('get')
+  // .method('is')
+  // .access('querystring')
+  // .access('idempotent')
+  // .access('socket')
+  // .access('search')
   .access('method')
-  .access('query')
+  // .access('query')
   .access('path')
-  .access('url')
-  .access('accept')
-  .getter('origin')
-  .getter('href')
-  .getter('subdomains')
-  .getter('protocol')
-  .getter('host')
-  .getter('hostname')
-  .getter('URL')
-  .getter('header')
-  .getter('headers')
-  .getter('secure')
-  .getter('stale')
-  .getter('fresh')
-  .getter('ips')
-  .getter('ip');
+  // .access('url')
+  // .access('accept')
+  // .getter('origin')
+  // .getter('href')
+  // .getter('subdomains')
+  // .getter('protocol')
+  // .getter('host')
+  // .getter('hostname')
+  // .getter('URL')
+  // .getter('header')
+  // .getter('headers')
+  // .getter('secure')
+  // .getter('stale')
+  // .getter('fresh')
+  // .getter('ips')
+  // .getter('ip');

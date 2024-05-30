@@ -1,3 +1,6 @@
+[delegates @1.0.0 / 2015-12-14](https://github.com/tj/node-delegates)
+--
+
 [path-to-regexp @6.2.1 / 2022-05-07](https://github.com/pillarjs/path-to-regexp)
 --
 
