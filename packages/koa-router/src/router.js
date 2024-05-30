@@ -284,17 +284,17 @@ Router.prototype.verb = function (method, pathToMath, action) {
 //   const router = this;
 //   const middleware = Array.prototype.slice.call(arguments);
 //   let path;
-
+//
 //   // support array of paths
 //   if (Array.isArray(middleware[0]) && typeof middleware[0][0] === 'string') {
 //     const arrPaths = middleware[0];
 //     for (const p of arrPaths) {
 //       router.use.apply(router, [p].concat(middleware.slice(1)));
 //     }
-
+//
 //     return this;
 //   }
-
+//
 //   const hasPath = typeof middleware[0] === 'string';
 //   if (hasPath) path = middleware.shift();
 
@@ -314,13 +314,13 @@ Router.prototype.verb = function (method, pathToMath, action) {
 //           Object.create(Layer.prototype),
 //           nestedLayer
 //         );
-
+//
 //         if (path) cloneLayer.setPrefix(path);
 //         if (router.opts.prefix) cloneLayer.setPrefix(router.opts.prefix);
 //         router.stack.push(cloneLayer);
 //         cloneRouter.stack[j] = cloneLayer;
 //       }
-
+//
 //       if (router.params) {
 //         function setRouterParams(paramArr) {
 //           const routerParams = paramArr;
@@ -341,7 +341,7 @@ Router.prototype.verb = function (method, pathToMath, action) {
 //       });
 //     }
 //   }
-
+//
 //   return this;
 // };
 

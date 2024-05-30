@@ -132,13 +132,13 @@ module.exports = class Application {
 
   use(fn) {
     if (typeof fn !== 'function') throw new TypeError('middleware must be a function!');
-    // if (isGeneratorFunction(fn)) {
-    //   deprecate('Support for generators will be removed in v3. ' +
-    //             'See the documentation for examples of how to convert old middleware ' +
-    //             'https://github.com/koajs/koa/blob/master/docs/migration.md');
-    //   fn = convert(fn);
-    // }
-    // debug('use %s', fn._name || fn.name || '-');
+  //   if (isGeneratorFunction(fn)) {
+  //     deprecate('Support for generators will be removed in v3. ' +
+  //               'See the documentation for examples of how to convert old middleware ' +
+  //               'https://github.com/koajs/koa/blob/master/docs/migration.md');
+  //     fn = convert(fn);
+  //   }
+  //   debug('use %s', fn._name || fn.name || '-');
     this.middleware.push(fn);
     return this;
   }
@@ -214,13 +214,13 @@ module.exports = class Application {
     const isNativeError =
       Object.prototype.toString.call(err) === '[object Error]' ||
       err instanceof Error;
-    if (!isNativeError) throw new TypeError(util.format('non-error thrown: %j', err));
+    if (!isNativeError) throw new TypeError(console.error(`non-error thrown: ${err}`));
 
     if (404 === err.status || err.expose) return;
     if (this.silent) return;
 
     const msg = err.stack || err.toString();
-    console.error(`\n${msg.replace(/^/gm, '  ')}\n`);
+    console.error(`${msg.replace(/^/gm, '  ')}`);
   }
 
   /**
