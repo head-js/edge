@@ -5,15 +5,15 @@
  * @link https://github.com/alexmingoia/koa-router
  */
 
-const { debuglog } = require('util');
+// const { debuglog } = require('util');
 
-const compose = require('koa-compose');
-const HttpError = require('http-errors');
-const methods = require('methods');
+const compose = require('./lib/compose');
+// const HttpError = require('http-errors');
+const methods = require('./lib/methods');
 const { pathToRegexp } = require('path-to-regexp');
 const Layer = require('./layer');
 
-const debug = debuglog('koa-router');
+// const debug = debuglog('koa-router');
 
 /**
  * @module koa-router
@@ -245,6 +245,11 @@ for (const method_ of methods) {
 // eslint-disable-next-line dot-notation
 Router.prototype.del = Router.prototype['delete'];
 
+Router.prototype.verb = function (method, pathToMath, action) {
+  const verb = method.toUpperCase();
+  this[verb](pathToMath, action);
+}
+
 /**
  * Use given middleware.
  *
@@ -275,70 +280,70 @@ Router.prototype.del = Router.prototype['delete'];
  * @returns {Router}
  */
 
-Router.prototype.use = function () {
-  const router = this;
-  const middleware = Array.prototype.slice.call(arguments);
-  let path;
+// Router.prototype.use = function () {
+//   const router = this;
+//   const middleware = Array.prototype.slice.call(arguments);
+//   let path;
 
-  // support array of paths
-  if (Array.isArray(middleware[0]) && typeof middleware[0][0] === 'string') {
-    const arrPaths = middleware[0];
-    for (const p of arrPaths) {
-      router.use.apply(router, [p].concat(middleware.slice(1)));
-    }
+//   // support array of paths
+//   if (Array.isArray(middleware[0]) && typeof middleware[0][0] === 'string') {
+//     const arrPaths = middleware[0];
+//     for (const p of arrPaths) {
+//       router.use.apply(router, [p].concat(middleware.slice(1)));
+//     }
 
-    return this;
-  }
+//     return this;
+//   }
 
-  const hasPath = typeof middleware[0] === 'string';
-  if (hasPath) path = middleware.shift();
+//   const hasPath = typeof middleware[0] === 'string';
+//   if (hasPath) path = middleware.shift();
 
-  for (const m of middleware) {
-    if (m.router) {
-      const cloneRouter = Object.assign(
-        Object.create(Router.prototype),
-        m.router,
-        {
-          stack: [...m.router.stack]
-        }
-      );
+//   for (const m of middleware) {
+//     if (m.router) {
+//       const cloneRouter = Object.assign(
+//         Object.create(Router.prototype),
+//         m.router,
+//         {
+//           stack: [...m.router.stack]
+//         }
+//       );
 
-      for (let j = 0; j < cloneRouter.stack.length; j++) {
-        const nestedLayer = cloneRouter.stack[j];
-        const cloneLayer = Object.assign(
-          Object.create(Layer.prototype),
-          nestedLayer
-        );
+//       for (let j = 0; j < cloneRouter.stack.length; j++) {
+//         const nestedLayer = cloneRouter.stack[j];
+//         const cloneLayer = Object.assign(
+//           Object.create(Layer.prototype),
+//           nestedLayer
+//         );
 
-        if (path) cloneLayer.setPrefix(path);
-        if (router.opts.prefix) cloneLayer.setPrefix(router.opts.prefix);
-        router.stack.push(cloneLayer);
-        cloneRouter.stack[j] = cloneLayer;
-      }
+//         if (path) cloneLayer.setPrefix(path);
+//         if (router.opts.prefix) cloneLayer.setPrefix(router.opts.prefix);
+//         router.stack.push(cloneLayer);
+//         cloneRouter.stack[j] = cloneLayer;
+//       }
 
-      if (router.params) {
-        function setRouterParams(paramArr) {
-          const routerParams = paramArr;
-          for (const key of routerParams) {
-            cloneRouter.param(key, router.params[key]);
-          }
-        }
+//       if (router.params) {
+//         function setRouterParams(paramArr) {
+//           const routerParams = paramArr;
+//           for (const key of routerParams) {
+//             cloneRouter.param(key, router.params[key]);
+//           }
+//         }
 
-        setRouterParams(Object.keys(router.params));
-      }
-    } else {
-      const keys = [];
-      pathToRegexp(router.opts.prefix || '', keys);
-      const routerPrefixHasParam = router.opts.prefix && keys.length;
-      router.register(path || '([^/]*)', [], m, {
-        end: false,
-        ignoreCaptures: !hasPath && !routerPrefixHasParam
-      });
-    }
-  }
+//         setRouterParams(Object.keys(router.params));
+//       }
+//     } else {
+//       const keys = [];
+//       pathToRegexp(router.opts.prefix || '', keys);
+//       const routerPrefixHasParam = router.opts.prefix && keys.length;
+//       router.register(path || '([^/]*)', [], m, {
+//         end: false,
+//         ignoreCaptures: !hasPath && !routerPrefixHasParam
+//       });
+//     }
+//   }
 
-  return this;
-};
+//   return this;
+// };
 
 /**
  * Set the path prefix for a Router instance that was already initialized.
@@ -353,18 +358,18 @@ Router.prototype.use = function () {
  * @returns {Router}
  */
 
-Router.prototype.prefix = function (prefix) {
-  prefix = prefix.replace(/\/$/, '');
+// Router.prototype.prefix = function (prefix) {
+//   prefix = prefix.replace(/\/$/, '');
 
-  this.opts.prefix = prefix;
+//   this.opts.prefix = prefix;
 
-  for (let i = 0; i < this.stack.length; i++) {
-    const route = this.stack[i];
-    route.setPrefix(prefix);
-  }
+//   for (let i = 0; i < this.stack.length; i++) {
+//     const route = this.stack[i];
+//     route.setPrefix(prefix);
+//   }
 
-  return this;
-};
+//   return this;
+// };
 
 /**
  * Returns router middleware which dispatches a route matching the request.
@@ -376,13 +381,13 @@ Router.prototype.routes = Router.prototype.middleware = function () {
   const router = this;
 
   const dispatch = function dispatch(ctx, next) {
-    debug('%s %s', ctx.method, ctx.path);
+    // debug('%s %s', ctx.method, ctx.path);
 
-    const hostMatched = router.matchHost(ctx.host);
+    // const hostMatched = router.matchHost(ctx.host);
 
-    if (!hostMatched) {
-      return next();
-    }
+    // if (!hostMatched) {
+    //   return next();
+    // }
 
     const path = router.opts.routerPath || ctx.routerPath || ctx.path;
     const matched = router.match(path, ctx.method);
@@ -478,59 +483,59 @@ Router.prototype.routes = Router.prototype.middleware = function () {
  * @returns {Function}
  */
 
-Router.prototype.allowedMethods = function (options = {}) {
-  const implemented = this.methods;
+// Router.prototype.allowedMethods = function (options = {}) {
+//   const implemented = this.methods;
 
-  return function allowedMethods(ctx, next) {
-    return next().then(function () {
-      const allowed = {};
+//   return function allowedMethods(ctx, next) {
+//     return next().then(function () {
+//       const allowed = {};
 
-      if (!ctx.status || ctx.status === 404) {
-        for (let i = 0; i < ctx.matched.length; i++) {
-          const route = ctx.matched[i];
-          for (let j = 0; j < route.methods.length; j++) {
-            const method = route.methods[j];
-            allowed[method] = method;
-          }
-        }
+//       if (!ctx.status || ctx.status === 404) {
+//         for (let i = 0; i < ctx.matched.length; i++) {
+//           const route = ctx.matched[i];
+//           for (let j = 0; j < route.methods.length; j++) {
+//             const method = route.methods[j];
+//             allowed[method] = method;
+//           }
+//         }
 
-        const allowedArr = Object.keys(allowed);
+//         const allowedArr = Object.keys(allowed);
 
-        if (!~implemented.indexOf(ctx.method)) {
-          if (options.throw) {
-            const notImplementedThrowable =
-              typeof options.notImplemented === 'function'
-                ? options.notImplemented() // set whatever the user returns from their function
-                : new HttpError.NotImplemented();
+//         if (!~implemented.indexOf(ctx.method)) {
+//           if (options.throw) {
+//             const notImplementedThrowable =
+//               typeof options.notImplemented === 'function'
+//                 ? options.notImplemented() // set whatever the user returns from their function
+//                 : new HttpError.NotImplemented();
 
-            throw notImplementedThrowable;
-          } else {
-            ctx.status = 501;
-            ctx.set('Allow', allowedArr.join(', '));
-          }
-        } else if (allowedArr.length > 0) {
-          if (ctx.method === 'OPTIONS') {
-            ctx.status = 200;
-            ctx.body = '';
-            ctx.set('Allow', allowedArr.join(', '));
-          } else if (!allowed[ctx.method]) {
-            if (options.throw) {
-              const notAllowedThrowable =
-                typeof options.methodNotAllowed === 'function'
-                  ? options.methodNotAllowed() // set whatever the user returns from their function
-                  : new HttpError.MethodNotAllowed();
+//             throw notImplementedThrowable;
+//           } else {
+//             ctx.status = 501;
+//             ctx.set('Allow', allowedArr.join(', '));
+//           }
+//         } else if (allowedArr.length > 0) {
+//           if (ctx.method === 'OPTIONS') {
+//             ctx.status = 200;
+//             ctx.body = '';
+//             ctx.set('Allow', allowedArr.join(', '));
+//           } else if (!allowed[ctx.method]) {
+//             if (options.throw) {
+//               const notAllowedThrowable =
+//                 typeof options.methodNotAllowed === 'function'
+//                   ? options.methodNotAllowed() // set whatever the user returns from their function
+//                   : new HttpError.MethodNotAllowed();
 
-              throw notAllowedThrowable;
-            } else {
-              ctx.status = 405;
-              ctx.set('Allow', allowedArr.join(', '));
-            }
-          }
-        }
-      }
-    });
-  };
-};
+//               throw notAllowedThrowable;
+//             } else {
+//               ctx.status = 405;
+//               ctx.set('Allow', allowedArr.join(', '));
+//             }
+//           }
+//         }
+//       }
+//     });
+//   };
+// };
 
 /**
  * Register route with all methods.
@@ -542,27 +547,27 @@ Router.prototype.allowedMethods = function (options = {}) {
  * @returns {Router}
  */
 
-Router.prototype.all = function (name, path, middleware) {
-  if (typeof path === 'string') {
-    middleware = Array.prototype.slice.call(arguments, 2);
-  } else {
-    middleware = Array.prototype.slice.call(arguments, 1);
-    path = name;
-    name = null;
-  }
+// Router.prototype.all = function (name, path, middleware) {
+//   if (typeof path === 'string') {
+//     middleware = Array.prototype.slice.call(arguments, 2);
+//   } else {
+//     middleware = Array.prototype.slice.call(arguments, 1);
+//     path = name;
+//     name = null;
+//   }
 
-  // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
-  if (
-    typeof path !== 'string' &&
-    !(path instanceof RegExp) &&
-    (!Array.isArray(path) || path.length === 0)
-  )
-    throw new Error('You have to provide a path when adding an all handler');
+//   // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
+//   if (
+//     typeof path !== 'string' &&
+//     !(path instanceof RegExp) &&
+//     (!Array.isArray(path) || path.length === 0)
+//   )
+//     throw new Error('You have to provide a path when adding an all handler');
 
-  this.register(path, methods, middleware, { name });
+//   this.register(path, methods, middleware, { name });
 
-  return this;
-};
+//   return this;
+// };
 
 /**
  * Redirect `source` to `destination` URL with optional 30x status `code`.
@@ -588,27 +593,27 @@ Router.prototype.all = function (name, path, middleware) {
  * @returns {Router}
  */
 
-Router.prototype.redirect = function (source, destination, code) {
-  // lookup source route by name
-  if (typeof source === 'symbol' || source[0] !== '/') {
-    source = this.url(source);
-    if (source instanceof Error) throw source;
-  }
+// Router.prototype.redirect = function (source, destination, code) {
+//   // lookup source route by name
+//   if (typeof source === 'symbol' || source[0] !== '/') {
+//     source = this.url(source);
+//     if (source instanceof Error) throw source;
+//   }
 
-  // lookup destination route by name
-  if (
-    typeof destination === 'symbol' ||
-    (destination[0] !== '/' && !destination.includes('://'))
-  ) {
-    destination = this.url(destination);
-    if (destination instanceof Error) throw destination;
-  }
+//   // lookup destination route by name
+//   if (
+//     typeof destination === 'symbol' ||
+//     (destination[0] !== '/' && !destination.includes('://'))
+//   ) {
+//     destination = this.url(destination);
+//     if (destination instanceof Error) throw destination;
+//   }
 
-  return this.all(source, (ctx) => {
-    ctx.redirect(destination);
-    ctx.status = code || 301;
-  });
-};
+//   return this.all(source, (ctx) => {
+//     ctx.redirect(destination);
+//     ctx.status = code || 301;
+//   });
+// };
 
 /**
  * Create and register a route.
@@ -655,7 +660,7 @@ Router.prototype.register = function (path, methods, middleware, opts = {}) {
 
   stack.push(route);
 
-  debug('defined route %s %s', route.methods, route.path);
+  // debug('defined route %s %s', route.methods, route.path);
 
   return route;
 };
@@ -667,15 +672,15 @@ Router.prototype.register = function (path, methods, middleware, opts = {}) {
  * @returns {Layer|false}
  */
 
-Router.prototype.route = function (name) {
-  const routes = this.stack;
+// Router.prototype.route = function (name) {
+//   const routes = this.stack;
 
-  for (let len = routes.length, i = 0; i < len; i++) {
-    if (routes[i].name && routes[i].name === name) return routes[i];
-  }
+//   for (let len = routes.length, i = 0; i < len; i++) {
+//     if (routes[i].name && routes[i].name === name) return routes[i];
+//   }
 
-  return false;
-};
+//   return false;
+// };
 
 /**
  * Generate URL for route. Takes a route name and map of named `params`.
@@ -712,16 +717,16 @@ Router.prototype.route = function (name) {
  * @returns {String|Error}
  */
 
-Router.prototype.url = function (name, params) {
-  const route = this.route(name);
+// Router.prototype.url = function (name, params) {
+//   const route = this.route(name);
 
-  if (route) {
-    const args = Array.prototype.slice.call(arguments, 1);
-    return route.url.apply(route, args);
-  }
+//   if (route) {
+//     const args = Array.prototype.slice.call(arguments, 1);
+//     return route.url.apply(route, args);
+//   }
 
-  return new Error(`No route found for name: ${String(name)}`);
-};
+//   return new Error(`No route found for name: ${String(name)}`);
+// };
 
 /**
  * Match given `path` and return corresponding routes.
@@ -745,7 +750,7 @@ Router.prototype.match = function (path, method) {
   for (let len = layers.length, i = 0; i < len; i++) {
     layer = layers[i];
 
-    debug('test %s %s', layer.path, layer.regexp);
+    // debug('test %s %s', layer.path, layer.regexp);
 
     // eslint-disable-next-line unicorn/prefer-regexp-test
     if (layer.match(path)) {
@@ -767,25 +772,25 @@ Router.prototype.match = function (path, method) {
  * @returns {boolean}
  */
 
-Router.prototype.matchHost = function (input) {
-  const { host } = this;
+// Router.prototype.matchHost = function (input) {
+//   const { host } = this;
 
-  if (!host) {
-    return true;
-  }
+//   if (!host) {
+//     return true;
+//   }
 
-  if (!input) {
-    return false;
-  }
+//   if (!input) {
+//     return false;
+//   }
 
-  if (typeof host === 'string') {
-    return input === host;
-  }
+//   if (typeof host === 'string') {
+//     return input === host;
+//   }
 
-  if (typeof host === 'object' && host instanceof RegExp) {
-    return host.test(input);
-  }
-};
+//   if (typeof host === 'object' && host instanceof RegExp) {
+//     return host.test(input);
+//   }
+// };
 
 /**
  * Run middleware for named route parameters. Useful for auto-loading or
@@ -817,15 +822,15 @@ Router.prototype.matchHost = function (input) {
  * @returns {Router}
  */
 
-Router.prototype.param = function (param, middleware) {
-  this.params[param] = middleware;
-  for (let i = 0; i < this.stack.length; i++) {
-    const route = this.stack[i];
-    route.param(param, middleware);
-  }
+// Router.prototype.param = function (param, middleware) {
+//   this.params[param] = middleware;
+//   for (let i = 0; i < this.stack.length; i++) {
+//     const route = this.stack[i];
+//     route.param(param, middleware);
+//   }
 
-  return this;
-};
+//   return this;
+// };
 
 /**
  * Generate URL from url pattern and given `params`.
@@ -841,7 +846,7 @@ Router.prototype.param = function (param, middleware) {
  * @param {Object} params url parameters
  * @returns {String}
  */
-Router.url = function (path) {
-  const args = Array.prototype.slice.call(arguments, 1);
-  return Layer.prototype.url.apply({ path }, args);
-};
+// Router.url = function (path) {
+//   const args = Array.prototype.slice.call(arguments, 1);
+//   return Layer.prototype.url.apply({ path }, args);
+// };

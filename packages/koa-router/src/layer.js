@@ -1,4 +1,4 @@
-const { parse: parseUrl, format: formatUrl } = require('url');
+// const { parse: parseUrl, format: formatUrl } = require('url');
 const { pathToRegexp, compile, parse } = require('path-to-regexp');
 
 module.exports = Layer;
@@ -107,50 +107,50 @@ Layer.prototype.captures = function (path) {
  * @private
  */
 
-Layer.prototype.url = function (params, options) {
-  let args = params;
-  const url = this.path.replace(/\(\.\*\)/g, '');
+// Layer.prototype.url = function (params, options) {
+//   let args = params;
+//   const url = this.path.replace(/\(\.\*\)/g, '');
 
-  if (typeof params !== 'object') {
-    args = Array.prototype.slice.call(arguments);
-    if (typeof args[args.length - 1] === 'object') {
-      options = args[args.length - 1];
-      args = args.slice(0, -1);
-    }
-  }
+//   if (typeof params !== 'object') {
+//     args = Array.prototype.slice.call(arguments);
+//     if (typeof args[args.length - 1] === 'object') {
+//       options = args[args.length - 1];
+//       args = args.slice(0, -1);
+//     }
+//   }
 
-  const toPath = compile(url, options);
-  let replaced;
+//   const toPath = compile(url, options);
+//   let replaced;
 
-  const tokens = parse(url);
-  let replace = {};
+//   const tokens = parse(url);
+//   let replace = {};
 
-  if (Array.isArray(args)) {
-    for (let len = tokens.length, i = 0, j = 0; i < len; i++) {
-      if (tokens[i].name) replace[tokens[i].name] = args[j++];
-    }
-  } else if (tokens.some((token) => token.name)) {
-    replace = params;
-  } else if (!options) {
-    options = params;
-  }
+//   if (Array.isArray(args)) {
+//     for (let len = tokens.length, i = 0, j = 0; i < len; i++) {
+//       if (tokens[i].name) replace[tokens[i].name] = args[j++];
+//     }
+//   } else if (tokens.some((token) => token.name)) {
+//     replace = params;
+//   } else if (!options) {
+//     options = params;
+//   }
 
-  replaced = toPath(replace);
+//   replaced = toPath(replace);
 
-  if (options && options.query) {
-    replaced = parseUrl(replaced);
-    if (typeof options.query === 'string') {
-      replaced.search = options.query;
-    } else {
-      replaced.search = undefined;
-      replaced.query = options.query;
-    }
+//   if (options && options.query) {
+//     replaced = parseUrl(replaced);
+//     if (typeof options.query === 'string') {
+//       replaced.search = options.query;
+//     } else {
+//       replaced.search = undefined;
+//       replaced.query = options.query;
+//     }
 
-    return formatUrl(replaced);
-  }
+//     return formatUrl(replaced);
+//   }
 
-  return replaced;
-};
+//   return replaced;
+// };
 
 /**
  * Run validations on route named parameters.
@@ -213,18 +213,18 @@ Layer.prototype.param = function (param, fn) {
  * @private
  */
 
-Layer.prototype.setPrefix = function (prefix) {
-  if (this.path) {
-    this.path =
-      this.path !== '/' || this.opts.strict === true
-        ? `${prefix}${this.path}`
-        : prefix;
-    this.paramNames = [];
-    this.regexp = pathToRegexp(this.path, this.paramNames, this.opts);
-  }
+// Layer.prototype.setPrefix = function (prefix) {
+//   if (this.path) {
+//     this.path =
+//       this.path !== '/' || this.opts.strict === true
+//         ? `${prefix}${this.path}`
+//         : prefix;
+//     this.paramNames = [];
+//     this.regexp = pathToRegexp(this.path, this.paramNames, this.opts);
+//   }
 
-  return this;
-};
+//   return this;
+// };
 
 /**
  * Safe decodeURIComponent, won't throw any error.

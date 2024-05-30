@@ -1,3 +1,6 @@
+[path-to-regexp @6.2.1 / 2022-05-07](https://github.com/pillarjs/path-to-regexp)
+--
+
 [Koa @2.13.4 / 2021-10-19](https://github.com/koajs/koa)
 --
 
