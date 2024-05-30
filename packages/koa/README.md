@@ -4,5 +4,5 @@
 [Koa Compose @4.2.0 / 2020-09-11](https://github.com/koajs/compose)
 --
 
-[Koa Router @10.1.1 / 2021-08-23](https://github.com/koajs/router)
+[Koa Router @11.0.1 / 2022-07-04](https://github.com/koajs/router)
 --
