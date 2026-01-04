@@ -168,12 +168,10 @@ const proto = module.exports = {
     // if ('ENOENT' === err.code) statusCode = 404;
 
     // // default to 500
-    // // if ('number' !== typeof statusCode || !statuses[statusCode]) statusCode = 500;
-    // if ('number' !== typeof statusCode) statusCode = 500;
+    // if ('number' !== typeof statusCode || !statuses[statusCode]) statusCode = 500;
 
     // // respond
-    // // const code = statuses[statusCode];
-    // const code = statusCode;
+    // const code = statuses[statusCode];
     // const msg = err.expose ? err.message : code;
     // this.status = err.status = statusCode;
     // this.length = Buffer.byteLength(msg);
