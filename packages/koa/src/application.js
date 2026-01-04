@@ -8,6 +8,7 @@
 // const isGeneratorFunction = require('is-generator-function');
 // const debug = require('debug')('koa:application');
 // const onFinished = require('on-finished');
+// const assert = require('assert');
 const compose = require('./lib/compose');
 const context = require('./context');
 const request = require('./request');
@@ -29,8 +30,7 @@ const Router = require('./lib/router');
  * Inherits from `Emitter.prototype`.
  */
 
-// module.exports = class Application extends Emitter {
-module.exports = class Application {
+module.exports = class Application /* extends Emitter */ {
   /**
    * Initialize a new `Application`.
    *
@@ -67,6 +67,11 @@ module.exports = class Application {
     // if (util.inspect.custom) {
     //   this[util.inspect.custom] = this.inspect;
     // }
+    // if (options.asyncLocalStorage) {
+    //   const { AsyncLocalStorage } = require('async_hooks');
+    //   assert(AsyncLocalStorage, 'Requires node 12.17.0 or higher to enable asyncLocalStorage');
+    //   this.ctxStorage = new AsyncLocalStorage();
+    // }
 
     this.router = new Router({ exclusive: true });
     this.use(this.router.routes());
@@ -89,7 +94,6 @@ module.exports = class Application {
     // const server = http.createServer(this.callback());
     // return server.listen(...args);
     const handleRequest = this.callback();
-
     this.client = new Client({ handleRequest });
   }
 
@@ -158,11 +162,23 @@ module.exports = class Application {
 
     const handleRequest = (req, res) => {
       const ctx = this.createContext(req, res);
-      return this.handleRequest(ctx, fn);
+      // if (!this.ctxStorage) {
+        return this.handleRequest(ctx, fn);
+      // }
+      // return this.ctxStorage.run(ctx, async() => {
+      //   return await this.handleRequest(ctx, fn);
+      // });
     };
 
     return handleRequest;
   }
+
+  /**
+   * return currnect contenxt from async local storage
+   */
+  // get currentContext() {
+  //   if (this.ctxStorage) return this.ctxStorage.getStore();
+  // }
 
   /**
    * Handle request in callback.
@@ -231,6 +247,15 @@ module.exports = class Application {
   static get default() {
     return Application;
   }
+
+  // createAsyncCtxStorageMiddleware() {
+  //   const app = this;
+  //   return async function asyncCtxStorage(ctx, next) {
+  //     await app.ctxStorage.run(ctx, async() => {
+  //       return await next();
+  //     });
+  //   };
+  // }
 };
 
 /**

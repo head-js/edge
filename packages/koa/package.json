@@ -1,6 +1,6 @@
 {
   "name": "@head/edge",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "@head/edge",
   "repository": "https://github.com/head-js/edge",
   "license": "MIT",
@@ -13,9 +13,12 @@
     "delegates": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.18.13",
-    "@babel/plugin-transform-for-of": "7.18.8",
-    "@babel/preset-env": "7.18.10",
+    "@babel/core": "7.22.20",
+    "@babel/preset-env": "7.22.20",
+    "@babel/runtime": "7.22.15",
+    "@babel/template": "7.22.15",
+    "@babel/traverse": "7.22.20",
+    "@babel/types": "7.22.19",
     "@rollup/plugin-babel": "6.0.3",
     "@rollup/plugin-commonjs": "23.0.7",
     "@rollup/plugin-node-resolve": "15.0.2",

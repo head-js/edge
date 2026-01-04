@@ -31,7 +31,7 @@ async function init() {
 [path-to-regexp @8.2.0 / 2024-09-26](https://github.com/pillarjs/path-to-regexp)
 --
 
-[Koa @2.13.4 / 2021-10-19](https://github.com/koajs/koa)
+[Koa @2.16.3 / 2025-10-18](https://github.com/koajs/koa)
 --
 
 [Koa Compose @4.2.0 / 2020-09-11](https://github.com/koajs/compose)
