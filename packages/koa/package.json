@@ -5,6 +5,7 @@
   "repository": "https://github.com/head-js/edge",
   "license": "MIT",
   "main": "dist/application.js",
+  "types": "types/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "rollup --config --strictDeprecations"
