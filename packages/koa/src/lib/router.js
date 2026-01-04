@@ -1,75 +1,67 @@
 'use strict';
 
-// require('core-js/modules/es.string.iterator.js');
+// require('core-js/modules/es.regexp.exec.js');
+// require('core-js/modules/es.array.reduce.js');
 // require('core-js/modules/es.array.iterator.js');
 // require('core-js/modules/web.dom-collections.iterator.js');
-// require('core-js/modules/es.regexp.exec.js');
-// require('core-js/modules/es.string.match.js');
-// require('core-js/modules/es.function.name.js');
-// require('core-js/modules/es.array.reduce.js');
-// require('core-js/modules/es.object.to-string.js');
-// require('core-js/modules/es.array.concat.js');
-// require('core-js/modules/es.array.is-array.js');
-// require('core-js/modules/es.object.keys.js');
-// require('core-js/modules/es.array.index-of.js');
+// require('core-js/modules/es.array.includes.js');
 // require('core-js/modules/es.regexp.constructor.js');
-// require('core-js/modules/es.regexp.to-string.js');
-// require('core-js/modules/es.array.slice.js');
 // require('core-js/modules/es.promise.js');
-// require('core-js/modules/es.function.bind.js');
-// require('core-js/modules/es.date.to-string.js');
-// require('core-js/modules/es.array.map.js');
-// require('core-js/modules/es.array.some.js');
-// require('core-js/modules/es.array.splice.js');
+// require('core-js/modules/es.string.replace.js');
 
-function getAugmentedNamespace(n) {
-  if (n.__esModule) return n;
-  var f = n.default;
-	if (typeof f == "function") {
-		var a = function a () {
-			if (this instanceof a) {
-				var args = [null];
-				args.push.apply(args, arguments);
-				var Ctor = Function.bind.apply(f, args);
-				return new Ctor();
-			}
-			return f.apply(this, arguments);
-		};
-		a.prototype = f.prototype;
-  } else a = {};
-  Object.defineProperty(a, '__esModule', {value: true});
-	Object.keys(n).forEach(function (k) {
-		var d = Object.getOwnPropertyDescriptor(n, k);
-		Object.defineProperty(a, k, d.get ? d : {
-			enumerable: true,
-			get: function () {
-				return n[k];
-			}
-		});
-	});
-	return a;
+function _defineProperty(e, r, t) {
+  return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+function ownKeys(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function (r) {
+      return Object.getOwnPropertyDescriptor(e, r).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread2(e) {
+  for (var r = 1; r < arguments.length; r++) {
+    var t = null != arguments[r] ? arguments[r] : {};
+    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
+      _defineProperty(e, r, t[r]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+    });
+  }
+  return e;
+}
+function _toPrimitive(t, r) {
+  if ("object" != typeof t || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != typeof i) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+function _toPropertyKey(t) {
+  var i = _toPrimitive(t, "string");
+  return "symbol" == typeof i ? i : i + "";
 }
 
-// require('core-js/modules/es.array.reduce.js');
-// require('core-js/modules/es.object.to-string.js');
-// require('core-js/modules/es.array.concat.js');
-// require('core-js/modules/es.array.is-array.js');
-// require('core-js/modules/es.string.iterator.js');
 // require('core-js/modules/es.array.iterator.js');
 // require('core-js/modules/web.dom-collections.iterator.js');
 // require('core-js/modules/es.promise.js');
-// require('core-js/modules/es.function.bind.js');
 
 /**
  * Expose compositor.
  */
 
 var src = compose$1;
-function flatten(arr) {
-  return arr.reduce(function (acc, next) {
-    return acc.concat(Array.isArray(next) ? flatten(next) : next);
-  }, []);
-}
 
 /**
  * Compose `middleware` returning
@@ -83,8 +75,7 @@ function flatten(arr) {
 
 function compose$1(middleware) {
   if (!Array.isArray(middleware)) throw new TypeError('Middleware stack must be an array!');
-  middleware = flatten(middleware);
-  for (var fn of middleware) {
+  for (const fn of middleware) {
     if (typeof fn !== 'function') throw new TypeError('Middleware must be composed of functions!');
   }
 
@@ -96,12 +87,12 @@ function compose$1(middleware) {
 
   return function (context, next) {
     // last called middleware #
-    var index = -1;
+    let index = -1;
     return dispatch(0);
     function dispatch(i) {
       if (i <= index) return Promise.reject(new Error('next() called multiple times'));
       index = i;
-      var fn = middleware[i];
+      let fn = middleware[i];
       if (i === middleware.length) fn = next;
       if (!fn) return Promise.resolve();
       try {
@@ -118,646 +109,648 @@ var compose_1 = src;
 
 var methods$1 = ['ACL', 'BIND', 'CHECKOUT', 'CONNECT', 'COPY', 'DELETE', 'GET', 'HEAD', 'LINK', 'LOCK', 'M-SEARCH', 'MERGE', 'MKACTIVITY', 'MKCALENDAR', 'MKCOL', 'MOVE', 'NOTIFY', 'OPTIONS', 'PATCH', 'POST', 'PRI', 'PROPFIND', 'PROPPATCH', 'PURGE', 'PUT', 'REBIND', 'REPORT', 'SEARCH', 'SOURCE', 'SUBSCRIBE', 'TRACE', 'UNBIND', 'UNLINK', 'UNLOCK', 'UNSUBSCRIBE'];
 
+var dist = {};
+
+Object.defineProperty(dist, "__esModule", { value: true });
+dist.TokenData = void 0;
+dist.parse = parse$1;
+dist.compile = compile$1;
+dist.match = match;
+dist.pathToRegexp = pathToRegexp$1;
+dist.stringify = stringify;
+const DEFAULT_DELIMITER = "/";
+const NOOP_VALUE = (value) => value;
+const ID_START = /^[$_\p{ID_Start}]$/u;
+const ID_CONTINUE = /^[$\u200c\u200d\p{ID_Continue}]$/u;
+const DEBUG_URL = "https://git.new/pathToRegexpError";
+const SIMPLE_TOKENS = {
+    // Groups.
+    "{": "{",
+    "}": "}",
+    // Reserved.
+    "(": "(",
+    ")": ")",
+    "[": "[",
+    "]": "]",
+    "+": "+",
+    "?": "?",
+    "!": "!",
+};
 /**
- * Tokenize input string.
+ * Escape text for stringify to path.
  */
-function lexer(str) {
-    var tokens = [];
-    var i = 0;
-    while (i < str.length) {
-        var char = str[i];
-        if (char === "*" || char === "+" || char === "?") {
-            tokens.push({ type: "MODIFIER", index: i, value: str[i++] });
-            continue;
-        }
-        if (char === "\\") {
-            tokens.push({ type: "ESCAPED_CHAR", index: i++, value: str[i++] });
-            continue;
-        }
-        if (char === "{") {
-            tokens.push({ type: "OPEN", index: i, value: str[i++] });
-            continue;
-        }
-        if (char === "}") {
-            tokens.push({ type: "CLOSE", index: i, value: str[i++] });
-            continue;
-        }
-        if (char === ":") {
-            var name = "";
-            var j = i + 1;
-            while (j < str.length) {
-                var code = str.charCodeAt(j);
-                if (
-                // `0-9`
-                (code >= 48 && code <= 57) ||
-                    // `A-Z`
-                    (code >= 65 && code <= 90) ||
-                    // `a-z`
-                    (code >= 97 && code <= 122) ||
-                    // `_`
-                    code === 95) {
-                    name += str[j++];
-                    continue;
-                }
-                break;
-            }
-            if (!name)
-                throw new TypeError("Missing parameter name at ".concat(i));
-            tokens.push({ type: "NAME", index: i, value: name });
-            i = j;
-            continue;
-        }
-        if (char === "(") {
-            var count = 1;
-            var pattern = "";
-            var j = i + 1;
-            if (str[j] === "?") {
-                throw new TypeError("Pattern cannot start with \"?\" at ".concat(j));
-            }
-            while (j < str.length) {
-                if (str[j] === "\\") {
-                    pattern += str[j++] + str[j++];
-                    continue;
-                }
-                if (str[j] === ")") {
-                    count--;
-                    if (count === 0) {
-                        j++;
-                        break;
-                    }
-                }
-                else if (str[j] === "(") {
-                    count++;
-                    if (str[j + 1] !== "?") {
-                        throw new TypeError("Capturing groups are not allowed at ".concat(j));
-                    }
-                }
-                pattern += str[j++];
-            }
-            if (count)
-                throw new TypeError("Unbalanced pattern at ".concat(i));
-            if (!pattern)
-                throw new TypeError("Missing pattern at ".concat(i));
-            tokens.push({ type: "PATTERN", index: i, value: pattern });
-            i = j;
-            continue;
-        }
-        tokens.push({ type: "CHAR", index: i, value: str[i++] });
-    }
-    tokens.push({ type: "END", index: i, value: "" });
-    return tokens;
-}
-/**
- * Parse a string for the raw tokens.
- */
-function parse(str, options) {
-    if (options === void 0) { options = {}; }
-    var tokens = lexer(str);
-    var _a = options.prefixes, prefixes = _a === void 0 ? "./" : _a;
-    var defaultPattern = "[^".concat(escapeString(options.delimiter || "/#?"), "]+?");
-    var result = [];
-    var key = 0;
-    var i = 0;
-    var path = "";
-    var tryConsume = function (type) {
-        if (i < tokens.length && tokens[i].type === type)
-            return tokens[i++].value;
-    };
-    var mustConsume = function (type) {
-        var value = tryConsume(type);
-        if (value !== undefined)
-            return value;
-        var _a = tokens[i], nextType = _a.type, index = _a.index;
-        throw new TypeError("Unexpected ".concat(nextType, " at ").concat(index, ", expected ").concat(type));
-    };
-    var consumeText = function () {
-        var result = "";
-        var value;
-        while ((value = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR"))) {
-            result += value;
-        }
-        return result;
-    };
-    while (i < tokens.length) {
-        var char = tryConsume("CHAR");
-        var name = tryConsume("NAME");
-        var pattern = tryConsume("PATTERN");
-        if (name || pattern) {
-            var prefix = char || "";
-            if (prefixes.indexOf(prefix) === -1) {
-                path += prefix;
-                prefix = "";
-            }
-            if (path) {
-                result.push(path);
-                path = "";
-            }
-            result.push({
-                name: name || key++,
-                prefix: prefix,
-                suffix: "",
-                pattern: pattern || defaultPattern,
-                modifier: tryConsume("MODIFIER") || "",
-            });
-            continue;
-        }
-        var value = char || tryConsume("ESCAPED_CHAR");
-        if (value) {
-            path += value;
-            continue;
-        }
-        if (path) {
-            result.push(path);
-            path = "";
-        }
-        var open = tryConsume("OPEN");
-        if (open) {
-            var prefix = consumeText();
-            var name_1 = tryConsume("NAME") || "";
-            var pattern_1 = tryConsume("PATTERN") || "";
-            var suffix = consumeText();
-            mustConsume("CLOSE");
-            result.push({
-                name: name_1 || (pattern_1 ? key++ : ""),
-                pattern: name_1 && !pattern_1 ? defaultPattern : pattern_1,
-                prefix: prefix,
-                suffix: suffix,
-                modifier: tryConsume("MODIFIER") || "",
-            });
-            continue;
-        }
-        mustConsume("END");
-    }
-    return result;
-}
-/**
- * Compile a string to a template function for the path.
- */
-function compile(str, options) {
-    return tokensToFunction(parse(str, options), options);
-}
-/**
- * Expose a method for transforming tokens into the path function.
- */
-function tokensToFunction(tokens, options) {
-    if (options === void 0) { options = {}; }
-    var reFlags = flags(options);
-    var _a = options.encode, encode = _a === void 0 ? function (x) { return x; } : _a, _b = options.validate, validate = _b === void 0 ? true : _b;
-    // Compile all the tokens into regexps.
-    var matches = tokens.map(function (token) {
-        if (typeof token === "object") {
-            return new RegExp("^(?:".concat(token.pattern, ")$"), reFlags);
-        }
-    });
-    return function (data) {
-        var path = "";
-        for (var i = 0; i < tokens.length; i++) {
-            var token = tokens[i];
-            if (typeof token === "string") {
-                path += token;
-                continue;
-            }
-            var value = data ? data[token.name] : undefined;
-            var optional = token.modifier === "?" || token.modifier === "*";
-            var repeat = token.modifier === "*" || token.modifier === "+";
-            if (Array.isArray(value)) {
-                if (!repeat) {
-                    throw new TypeError("Expected \"".concat(token.name, "\" to not repeat, but got an array"));
-                }
-                if (value.length === 0) {
-                    if (optional)
-                        continue;
-                    throw new TypeError("Expected \"".concat(token.name, "\" to not be empty"));
-                }
-                for (var j = 0; j < value.length; j++) {
-                    var segment = encode(value[j], token);
-                    if (validate && !matches[i].test(segment)) {
-                        throw new TypeError("Expected all \"".concat(token.name, "\" to match \"").concat(token.pattern, "\", but got \"").concat(segment, "\""));
-                    }
-                    path += token.prefix + segment + token.suffix;
-                }
-                continue;
-            }
-            if (typeof value === "string" || typeof value === "number") {
-                var segment = encode(String(value), token);
-                if (validate && !matches[i].test(segment)) {
-                    throw new TypeError("Expected \"".concat(token.name, "\" to match \"").concat(token.pattern, "\", but got \"").concat(segment, "\""));
-                }
-                path += token.prefix + segment + token.suffix;
-                continue;
-            }
-            if (optional)
-                continue;
-            var typeOfMessage = repeat ? "an array" : "a string";
-            throw new TypeError("Expected \"".concat(token.name, "\" to be ").concat(typeOfMessage));
-        }
-        return path;
-    };
-}
-/**
- * Create path match function from `path-to-regexp` spec.
- */
-function match(str, options) {
-    var keys = [];
-    var re = pathToRegexp$1(str, keys, options);
-    return regexpToFunction(re, keys, options);
-}
-/**
- * Create a path match function from `path-to-regexp` output.
- */
-function regexpToFunction(re, keys, options) {
-    if (options === void 0) { options = {}; }
-    var _a = options.decode, decode = _a === void 0 ? function (x) { return x; } : _a;
-    return function (pathname) {
-        var m = re.exec(pathname);
-        if (!m)
-            return false;
-        var path = m[0], index = m.index;
-        var params = Object.create(null);
-        var _loop_1 = function (i) {
-            if (m[i] === undefined)
-                return "continue";
-            var key = keys[i - 1];
-            if (key.modifier === "*" || key.modifier === "+") {
-                params[key.name] = m[i].split(key.prefix + key.suffix).map(function (value) {
-                    return decode(value, key);
-                });
-            }
-            else {
-                params[key.name] = decode(m[i], key);
-            }
-        };
-        for (var i = 1; i < m.length; i++) {
-            _loop_1(i);
-        }
-        return { path: path, index: index, params: params };
-    };
+function escapeText(str) {
+    return str.replace(/[{}()\[\]+?!:*]/g, "\\$&");
 }
 /**
  * Escape a regular expression string.
  */
-function escapeString(str) {
-    return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
+function escape(str) {
+    return str.replace(/[.+*?^${}()[\]|/\\]/g, "\\$&");
 }
 /**
- * Get the flags for a regexp from the options.
+ * Tokenize input string.
  */
-function flags(options) {
-    return options && options.sensitive ? "" : "i";
-}
-/**
- * Pull out keys from a regexp.
- */
-function regexpToRegexp(path, keys) {
-    if (!keys)
-        return path;
-    var groupsRegex = /\((?:\?<(.*?)>)?(?!\?)/g;
-    var index = 0;
-    var execResult = groupsRegex.exec(path.source);
-    while (execResult) {
-        keys.push({
-            // Use parenthesized substring match if available, index otherwise
-            name: execResult[1] || index++,
-            prefix: "",
-            suffix: "",
-            modifier: "",
-            pattern: "",
-        });
-        execResult = groupsRegex.exec(path.source);
-    }
-    return path;
-}
-/**
- * Transform an array into a regexp.
- */
-function arrayToRegexp(paths, keys, options) {
-    var parts = paths.map(function (path) { return pathToRegexp$1(path, keys, options).source; });
-    return new RegExp("(?:".concat(parts.join("|"), ")"), flags(options));
-}
-/**
- * Create a path regexp from string input.
- */
-function stringToRegexp(path, keys, options) {
-    return tokensToRegexp(parse(path, options), keys, options);
-}
-/**
- * Expose a function for taking tokens and returning a RegExp.
- */
-function tokensToRegexp(tokens, keys, options) {
-    if (options === void 0) { options = {}; }
-    var _a = options.strict, strict = _a === void 0 ? false : _a, _b = options.start, start = _b === void 0 ? true : _b, _c = options.end, end = _c === void 0 ? true : _c, _d = options.encode, encode = _d === void 0 ? function (x) { return x; } : _d, _e = options.delimiter, delimiter = _e === void 0 ? "/#?" : _e, _f = options.endsWith, endsWith = _f === void 0 ? "" : _f;
-    var endsWithRe = "[".concat(escapeString(endsWith), "]|$");
-    var delimiterRe = "[".concat(escapeString(delimiter), "]");
-    var route = start ? "^" : "";
-    // Iterate over the tokens and create our regexp string.
-    for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
-        var token = tokens_1[_i];
-        if (typeof token === "string") {
-            route += escapeString(encode(token));
+function* lexer(str) {
+    const chars = [...str];
+    let i = 0;
+    function name() {
+        let value = "";
+        if (ID_START.test(chars[++i])) {
+            value += chars[i];
+            while (ID_CONTINUE.test(chars[++i])) {
+                value += chars[i];
+            }
         }
-        else {
-            var prefix = escapeString(encode(token.prefix));
-            var suffix = escapeString(encode(token.suffix));
-            if (token.pattern) {
-                if (keys)
-                    keys.push(token);
-                if (prefix || suffix) {
-                    if (token.modifier === "+" || token.modifier === "*") {
-                        var mod = token.modifier === "*" ? "?" : "";
-                        route += "(?:".concat(prefix, "((?:").concat(token.pattern, ")(?:").concat(suffix).concat(prefix, "(?:").concat(token.pattern, "))*)").concat(suffix, ")").concat(mod);
-                    }
-                    else {
-                        route += "(?:".concat(prefix, "(").concat(token.pattern, ")").concat(suffix, ")").concat(token.modifier);
-                    }
+        else if (chars[i] === '"') {
+            let pos = i;
+            while (i < chars.length) {
+                if (chars[++i] === '"') {
+                    i++;
+                    pos = 0;
+                    break;
+                }
+                if (chars[i] === "\\") {
+                    value += chars[++i];
                 }
                 else {
-                    if (token.modifier === "+" || token.modifier === "*") {
-                        route += "((?:".concat(token.pattern, ")").concat(token.modifier, ")");
-                    }
-                    else {
-                        route += "(".concat(token.pattern, ")").concat(token.modifier);
-                    }
+                    value += chars[i];
                 }
             }
-            else {
-                route += "(?:".concat(prefix).concat(suffix, ")").concat(token.modifier);
+            if (pos) {
+                throw new TypeError(`Unterminated quote at ${pos}: ${DEBUG_URL}`);
             }
         }
+        if (!value) {
+            throw new TypeError(`Missing parameter name at ${i}: ${DEBUG_URL}`);
+        }
+        return value;
     }
-    if (end) {
-        if (!strict)
-            route += "".concat(delimiterRe, "?");
-        route += !options.endsWith ? "$" : "(?=".concat(endsWithRe, ")");
+    while (i < chars.length) {
+        const value = chars[i];
+        const type = SIMPLE_TOKENS[value];
+        if (type) {
+            yield { type, index: i++, value };
+        }
+        else if (value === "\\") {
+            yield { type: "ESCAPED", index: i++, value: chars[i++] };
+        }
+        else if (value === ":") {
+            const value = name();
+            yield { type: "PARAM", index: i, value };
+        }
+        else if (value === "*") {
+            const value = name();
+            yield { type: "WILDCARD", index: i, value };
+        }
+        else {
+            yield { type: "CHAR", index: i, value: chars[i++] };
+        }
+    }
+    return { type: "END", index: i, value: "" };
+}
+class Iter {
+    constructor(tokens) {
+        this.tokens = tokens;
+    }
+    peek() {
+        if (!this._peek) {
+            const next = this.tokens.next();
+            this._peek = next.value;
+        }
+        return this._peek;
+    }
+    tryConsume(type) {
+        const token = this.peek();
+        if (token.type !== type)
+            return;
+        this._peek = undefined; // Reset after consumed.
+        return token.value;
+    }
+    consume(type) {
+        const value = this.tryConsume(type);
+        if (value !== undefined)
+            return value;
+        const { type: nextType, index } = this.peek();
+        throw new TypeError(`Unexpected ${nextType} at ${index}, expected ${type}: ${DEBUG_URL}`);
+    }
+    text() {
+        let result = "";
+        let value;
+        while ((value = this.tryConsume("CHAR") || this.tryConsume("ESCAPED"))) {
+            result += value;
+        }
+        return result;
+    }
+}
+/**
+ * Tokenized path instance.
+ */
+class TokenData {
+    constructor(tokens) {
+        this.tokens = tokens;
+    }
+}
+dist.TokenData = TokenData;
+/**
+ * Parse a string for the raw tokens.
+ */
+function parse$1(str, options = {}) {
+    const { encodePath = NOOP_VALUE } = options;
+    const it = new Iter(lexer(str));
+    function consume(endType) {
+        const tokens = [];
+        while (true) {
+            const path = it.text();
+            if (path)
+                tokens.push({ type: "text", value: encodePath(path) });
+            const param = it.tryConsume("PARAM");
+            if (param) {
+                tokens.push({
+                    type: "param",
+                    name: param,
+                });
+                continue;
+            }
+            const wildcard = it.tryConsume("WILDCARD");
+            if (wildcard) {
+                tokens.push({
+                    type: "wildcard",
+                    name: wildcard,
+                });
+                continue;
+            }
+            const open = it.tryConsume("{");
+            if (open) {
+                tokens.push({
+                    type: "group",
+                    tokens: consume("}"),
+                });
+                continue;
+            }
+            it.consume(endType);
+            return tokens;
+        }
+    }
+    const tokens = consume("END");
+    return new TokenData(tokens);
+}
+/**
+ * Compile a string to a template function for the path.
+ */
+function compile$1(path, options = {}) {
+    const { encode = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
+    const data = path instanceof TokenData ? path : parse$1(path, options);
+    const fn = tokensToFunction(data.tokens, delimiter, encode);
+    return function path(data = {}) {
+        const [path, ...missing] = fn(data);
+        if (missing.length) {
+            throw new TypeError(`Missing parameters: ${missing.join(", ")}`);
+        }
+        return path;
+    };
+}
+function tokensToFunction(tokens, delimiter, encode) {
+    const encoders = tokens.map((token) => tokenToFunction(token, delimiter, encode));
+    return (data) => {
+        const result = [""];
+        for (const encoder of encoders) {
+            const [value, ...extras] = encoder(data);
+            result[0] += value;
+            result.push(...extras);
+        }
+        return result;
+    };
+}
+/**
+ * Convert a single token into a path building function.
+ */
+function tokenToFunction(token, delimiter, encode) {
+    if (token.type === "text")
+        return () => [token.value];
+    if (token.type === "group") {
+        const fn = tokensToFunction(token.tokens, delimiter, encode);
+        return (data) => {
+            const [value, ...missing] = fn(data);
+            if (!missing.length)
+                return [value];
+            return [""];
+        };
+    }
+    const encodeValue = encode || NOOP_VALUE;
+    if (token.type === "wildcard" && encode !== false) {
+        return (data) => {
+            const value = data[token.name];
+            if (value == null)
+                return ["", token.name];
+            if (!Array.isArray(value) || value.length === 0) {
+                throw new TypeError(`Expected "${token.name}" to be a non-empty array`);
+            }
+            return [
+                value
+                    .map((value, index) => {
+                    if (typeof value !== "string") {
+                        throw new TypeError(`Expected "${token.name}/${index}" to be a string`);
+                    }
+                    return encodeValue(value);
+                })
+                    .join(delimiter),
+            ];
+        };
+    }
+    return (data) => {
+        const value = data[token.name];
+        if (value == null)
+            return ["", token.name];
+        if (typeof value !== "string") {
+            throw new TypeError(`Expected "${token.name}" to be a string`);
+        }
+        return [encodeValue(value)];
+    };
+}
+/**
+ * Transform a path into a match function.
+ */
+function match(path, options = {}) {
+    const { decode = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
+    const { regexp, keys } = pathToRegexp$1(path, options);
+    const decoders = keys.map((key) => {
+        if (decode === false)
+            return NOOP_VALUE;
+        if (key.type === "param")
+            return decode;
+        return (value) => value.split(delimiter).map(decode);
+    });
+    return function match(input) {
+        const m = regexp.exec(input);
+        if (!m)
+            return false;
+        const path = m[0];
+        const params = Object.create(null);
+        for (let i = 1; i < m.length; i++) {
+            if (m[i] === undefined)
+                continue;
+            const key = keys[i - 1];
+            const decoder = decoders[i - 1];
+            params[key.name] = decoder(m[i]);
+        }
+        return { path, params };
+    };
+}
+function pathToRegexp$1(path, options = {}) {
+    const { delimiter = DEFAULT_DELIMITER, end = true, sensitive = false, trailing = true, } = options;
+    const keys = [];
+    const sources = [];
+    const flags = sensitive ? "" : "i";
+    const paths = Array.isArray(path) ? path : [path];
+    const items = paths.map((path) => path instanceof TokenData ? path : parse$1(path, options));
+    for (const { tokens } of items) {
+        for (const seq of flatten(tokens, 0, [])) {
+            const regexp = sequenceToRegExp(seq, delimiter, keys);
+            sources.push(regexp);
+        }
+    }
+    let pattern = `^(?:${sources.join("|")})`;
+    if (trailing)
+        pattern += `(?:${escape(delimiter)}$)?`;
+    pattern += end ? "$" : `(?=${escape(delimiter)}|$)`;
+    const regexp = new RegExp(pattern, flags);
+    return { regexp, keys };
+}
+/**
+ * Generate a flat list of sequence tokens from the given tokens.
+ */
+function* flatten(tokens, index, init) {
+    if (index === tokens.length) {
+        return yield init;
+    }
+    const token = tokens[index];
+    if (token.type === "group") {
+        const fork = init.slice();
+        for (const seq of flatten(token.tokens, 0, fork)) {
+            yield* flatten(tokens, index + 1, seq);
+        }
     }
     else {
-        var endToken = tokens[tokens.length - 1];
-        var isEndDelimited = typeof endToken === "string"
-            ? delimiterRe.indexOf(endToken[endToken.length - 1]) > -1
-            : endToken === undefined;
-        if (!strict) {
-            route += "(?:".concat(delimiterRe, "(?=").concat(endsWithRe, "))?");
+        init.push(token);
+    }
+    yield* flatten(tokens, index + 1, init);
+}
+/**
+ * Transform a flat sequence of tokens into a regular expression.
+ */
+function sequenceToRegExp(tokens, delimiter, keys) {
+    let result = "";
+    let backtrack = "";
+    let isSafeSegmentParam = true;
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        if (token.type === "text") {
+            result += escape(token.value);
+            backtrack += token.value;
+            isSafeSegmentParam || (isSafeSegmentParam = token.value.includes(delimiter));
+            continue;
         }
-        if (!isEndDelimited) {
-            route += "(?=".concat(delimiterRe, "|").concat(endsWithRe, ")");
+        if (token.type === "param" || token.type === "wildcard") {
+            if (!isSafeSegmentParam && !backtrack) {
+                throw new TypeError(`Missing text after "${token.name}": ${DEBUG_URL}`);
+            }
+            if (token.type === "param") {
+                result += `(${negate(delimiter, isSafeSegmentParam ? "" : backtrack)}+)`;
+            }
+            else {
+                result += `([\\s\\S]+)`;
+            }
+            keys.push(token);
+            backtrack = "";
+            isSafeSegmentParam = false;
+            continue;
         }
     }
-    return new RegExp(route, flags(options));
+    return result;
 }
-/**
- * Normalize the given path string, returning a regular expression.
- *
- * An empty array can be passed in for the keys, which will hold the
- * placeholder key descriptions. For example, using `/user/:id`, `keys` will
- * contain `[{ name: 'id', delimiter: '/', optional: false, repeat: false }]`.
- */
-function pathToRegexp$1(path, keys, options) {
-    if (path instanceof RegExp)
-        return regexpToRegexp(path, keys);
-    if (Array.isArray(path))
-        return arrayToRegexp(path, keys, options);
-    return stringToRegexp(path, keys, options);
-}
-
-var dist_es2015 = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	compile: compile,
-	match: match,
-	parse: parse,
-	pathToRegexp: pathToRegexp$1,
-	regexpToFunction: regexpToFunction,
-	tokensToFunction: tokensToFunction,
-	tokensToRegexp: tokensToRegexp
-});
-
-var require$$2 = /*@__PURE__*/getAugmentedNamespace(dist_es2015);
-
-function _typeof(o) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
-
-// const { parse: parseUrl, format: formatUrl } = require('url');
-var pathToRegexp = require$$2.pathToRegexp;
-  require$$2.compile;
-  require$$2.parse;
-var layer = Layer$1;
-
-/**
- * Initialize a new routing Layer with given `method`, `path`, and `middleware`.
- *
- * @param {String|RegExp} path Path string or regular expression.
- * @param {Array} methods Array of HTTP verbs.
- * @param {Array} middleware Layer callback/middleware or series of.
- * @param {Object=} opts
- * @param {String=} opts.name route name
- * @param {String=} opts.sensitive case sensitive (default: false)
- * @param {String=} opts.strict require the trailing slash (default: false)
- * @returns {Layer}
- * @private
- */
-
-function Layer$1(path, methods, middleware) {
-  var opts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  this.opts = opts;
-  this.name = this.opts.name || null;
-  this.methods = [];
-  this.paramNames = [];
-  this.stack = Array.isArray(middleware) ? middleware : [middleware];
-  for (var method of methods) {
-    var l = this.methods.push(method.toUpperCase());
-    if (this.methods[l - 1] === 'GET') this.methods.unshift('HEAD');
-  }
-
-  // ensure middleware is a function
-  for (var i = 0; i < this.stack.length; i++) {
-    var fn = this.stack[i];
-    var type = _typeof(fn);
-    if (type !== 'function') throw new Error("".concat(methods.toString(), " `").concat(this.opts.name || path, "`: `middleware` must be a function, not `").concat(type, "`"));
-  }
-  this.path = path;
-  this.regexp = pathToRegexp(path, this.paramNames, this.opts);
-}
-
-/**
- * Returns whether request `path` matches route.
- *
- * @param {String} path
- * @returns {Boolean}
- * @private
- */
-
-Layer$1.prototype.match = function (path) {
-  return this.regexp.test(path);
-};
-
-/**
- * Returns map of URL parameters for given `path` and `paramNames`.
- *
- * @param {String} path
- * @param {Array.<String>} captures
- * @param {Object=} params
- * @returns {Object}
- * @private
- */
-
-Layer$1.prototype.params = function (path, captures) {
-  var params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  for (var len = captures.length, i = 0; i < len; i++) {
-    if (this.paramNames[i]) {
-      var c = captures[i];
-      if (c && c.length > 0) params[this.paramNames[i].name] = c ? safeDecodeURIComponent(c) : c;
+function negate(delimiter, backtrack) {
+    if (backtrack.length < 2) {
+        if (delimiter.length < 2)
+            return `[^${escape(delimiter + backtrack)}]`;
+        return `(?:(?!${escape(delimiter)})[^${escape(backtrack)}])`;
     }
-  }
-  return params;
-};
-
+    if (delimiter.length < 2) {
+        return `(?:(?!${escape(backtrack)})[^${escape(delimiter)}])`;
+    }
+    return `(?:(?!${escape(backtrack)}|${escape(delimiter)})[\\s\\S])`;
+}
 /**
- * Returns array of regexp url path captures.
- *
- * @param {String} path
- * @returns {Array.<String>}
- * @private
+ * Stringify token data into a path string.
  */
+function stringify(data) {
+    return data.tokens
+        .map(function stringifyToken(token, index, tokens) {
+        if (token.type === "text")
+            return escapeText(token.value);
+        if (token.type === "group") {
+            return `{${token.tokens.map(stringifyToken).join("")}}`;
+        }
+        const isSafe = isNameSafe(token.name) && isNextNameSafe(tokens[index + 1]);
+        const key = isSafe ? token.name : JSON.stringify(token.name);
+        if (token.type === "param")
+            return `:${key}`;
+        if (token.type === "wildcard")
+            return `*${key}`;
+        throw new TypeError(`Unexpected token: ${token}`);
+    })
+        .join("");
+}
+function isNameSafe(name) {
+    const [first, ...rest] = name;
+    if (!ID_START.test(first))
+        return false;
+    return rest.every((char) => ID_CONTINUE.test(char));
+}
+function isNextNameSafe(token) {
+    if ((token === null || token === void 0 ? void 0 : token.type) !== "text")
+        return true;
+    return !ID_CONTINUE.test(token.value[0]);
+}
 
-Layer$1.prototype.captures = function (path) {
-  return this.opts.ignoreCaptures ? [] : path.match(this.regexp).slice(1);
-};
+// const { parse: parseUrl, format: formatUrl } = require('node:url');
 
-/**
- * Generate URL for route using given `params`.
- *
- * @example
- *
- * ```javascript
- * const route = new Layer('/users/:id', ['GET'], fn);
- *
- * route.url({ id: 123 }); // => "/users/123"
- * ```
- *
- * @param {Object} params url parameters
- * @returns {String}
- * @private
- */
-
-// Layer.prototype.url = function (params, options) {
-//   let args = params;
-//   const url = this.path.replace(/\(\.\*\)/g, '');
-
-//   if (typeof params !== 'object') {
-//     args = Array.prototype.slice.call(arguments);
-//     if (typeof args[args.length - 1] === 'object') {
-//       options = args[args.length - 1];
-//       args = args.slice(0, -1);
-//     }
-//   }
-
-//   const toPath = compile(url, options);
-//   let replaced;
-
-//   const tokens = parse(url);
-//   let replace = {};
-
-//   if (Array.isArray(args)) {
-//     for (let len = tokens.length, i = 0, j = 0; i < len; i++) {
-//       if (tokens[i].name) replace[tokens[i].name] = args[j++];
-//     }
-//   } else if (tokens.some((token) => token.name)) {
-//     replace = params;
-//   } else if (!options) {
-//     options = params;
-//   }
-
-//   replaced = toPath(replace);
-
-//   if (options && options.query) {
-//     replaced = parseUrl(replaced);
-//     if (typeof options.query === 'string') {
-//       replaced.search = options.query;
-//     } else {
-//       replaced.search = undefined;
-//       replaced.query = options.query;
-//     }
-
-//     return formatUrl(replaced);
-//   }
-
-//   return replaced;
-// };
-
-/**
- * Run validations on route named parameters.
- *
- * @example
- *
- * ```javascript
- * router
- *   .param('user', function (id, ctx, next) {
- *     ctx.user = users[id];
- *     if (!ctx.user) return ctx.status = 404;
- *     next();
- *   })
- *   .get('/users/:user', function (ctx, next) {
- *     ctx.body = ctx.user;
- *   });
- * ```
- *
- * @param {String} param
- * @param {Function} middleware
- * @returns {Layer}
- * @private
- */
-
-Layer$1.prototype.param = function (param, fn) {
-  var stack = this.stack;
-  var params = this.paramNames;
-  var middleware = function middleware(ctx, next) {
-    return fn.call(this, ctx.params[param], ctx, next);
-  };
-  middleware.param = param;
-  var names = params.map(function (p) {
-    return p.name;
-  });
-  var x = names.indexOf(param);
-  if (x > -1) {
-    // iterate through the stack, to figure out where to place the handler fn
-    stack.some(function (fn, i) {
-      // param handlers are always first, so when we find an fn w/o a param property, stop here
-      // if the param handler at this part of the stack comes after the one we are adding, stop here
-      if (!fn.param || names.indexOf(fn.param) > x) {
-        // inject this param handler right before the current item
-        stack.splice(i, 0, middleware);
-        return true; // then break the loop
+const {
+  pathToRegexp,
+  compile,
+  parse
+} = dist;
+var layer = class Layer {
+  /**
+   * Initialize a new routing Layer with given `method`, `path`, and `middleware`.
+   *
+   * @param {String|RegExp} path Path string or regular expression.
+   * @param {Array} methods Array of HTTP verbs.
+   * @param {Array} middleware Layer callback/middleware or series of.
+   * @param {Object=} opts
+   * @param {String=} opts.name route name
+   * @param {String=} opts.sensitive case sensitive (default: false)
+   * @param {String=} opts.strict require the trailing slash (default: false)
+   * @param {Boolean=} opts.pathAsRegExp if true, treat `path` as a regular expression
+   * @returns {Layer}
+   * @private
+   */
+  constructor(path, methods, middleware) {
+    let opts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    this.opts = opts;
+    this.name = this.opts.name || null;
+    this.methods = [];
+    for (const method of methods) {
+      const l = this.methods.push(method.toUpperCase());
+      if (this.methods[l - 1] === 'GET') this.methods.unshift('HEAD');
+    }
+    this.stack = Array.isArray(middleware) ? middleware : [middleware];
+    // ensure middleware is a function
+    for (let i = 0; i < this.stack.length; i++) {
+      const fn = this.stack[i];
+      const type = typeof fn;
+      if (type !== 'function') throw new Error("".concat(methods.toString(), " `").concat(this.opts.name || path, "`: `middleware` must be a function, not `").concat(type, "`"));
+    }
+    this.path = path;
+    this.paramNames = [];
+    if (this.opts.pathAsRegExp === true) {
+      this.regexp = new RegExp(path);
+    } else if (this.path) {
+      if ('strict' in this.opts) {
+        // path-to-regexp renamed strict to trailing in v8.1.0
+        this.opts.trailing = this.opts.strict !== true;
       }
-    });
+      const {
+        regexp,
+        keys
+      } = pathToRegexp(this.path, this.opts);
+      this.regexp = regexp;
+      this.paramNames = keys;
+    }
   }
-  return this;
+
+  /**
+   * Returns whether request `path` matches route.
+   *
+   * @param {String} path
+   * @returns {Boolean}
+   * @private
+   */
+  match(path) {
+    return this.regexp.test(path);
+  }
+
+  /**
+   * Returns map of URL parameters for given `path` and `paramNames`.
+   *
+   * @param {String} path
+   * @param {Array.<String>} captures
+   * @param {Object=} params
+   * @returns {Object}
+   * @private
+   */
+  params(path, captures) {
+    let params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    for (let len = captures.length, i = 0; i < len; i++) {
+      if (this.paramNames[i]) {
+        const c = captures[i];
+        if (c && c.length > 0) params[this.paramNames[i].name] = c ? safeDecodeURIComponent(c) : c;
+      }
+    }
+    return params;
+  }
+
+  /**
+   * Returns array of regexp url path captures.
+   *
+   * @param {String} path
+   * @returns {Array.<String>}
+   * @private
+   */
+  captures(path) {
+    return this.opts.ignoreCaptures ? [] : path.match(this.regexp).slice(1);
+  }
+
+  /**
+   * Generate URL for route using given `params`.
+   *
+   * @example
+   *
+   * ```javascript
+   * const route = new Layer('/users/:id', ['GET'], fn);
+   *
+   * route.url({ id: 123 }); // => "/users/123"
+   * ```
+   *
+   * @param {Object} params url parameters
+   * @returns {String}
+   * @private
+   */
+  // url(params, options) {
+  //   let args = params;
+  //   const url = this.path.replace(/\(\.\*\)/g, '');
+
+  //   if (typeof params !== 'object') {
+  //     args = Array.prototype.slice.call(arguments);
+  //     if (typeof args[args.length - 1] === 'object') {
+  //       options = args[args.length - 1];
+  //       args = args.slice(0, -1);
+  //     }
+  //   }
+
+  //   const toPath = compile(url, { encode: encodeURIComponent, ...options });
+  //   let replaced;
+  //   const { tokens } = parse(url);
+  //   let replace = {};
+
+  //   if (Array.isArray(args)) {
+  //     for (let len = tokens.length, i = 0, j = 0; i < len; i++) {
+  //       if (tokens[i].name) {
+  //         replace[tokens[i].name] = args[j++];
+  //       }
+  //     }
+  //   } else if (tokens.some((token) => token.name)) {
+  //     replace = params;
+  //   } else if (!options) {
+  //     options = params;
+  //   }
+
+  //   for (const [key, value] of Object.entries(replace)) {
+  //     replace[key] = String(value);
+  //   }
+
+  //   replaced = toPath(replace);
+
+  //   if (options && options.query) {
+  //     replaced = parseUrl(replaced);
+  //     if (typeof options.query === 'string') {
+  //       replaced.search = options.query;
+  //     } else {
+  //       replaced.search = undefined;
+  //       replaced.query = options.query;
+  //     }
+
+  //     return formatUrl(replaced);
+  //   }
+
+  //   return replaced;
+  // }
+
+  /**
+   * Run validations on route named parameters.
+   *
+   * @example
+   *
+   * ```javascript
+   * router
+   *   .param('user', function (id, ctx, next) {
+   *     ctx.user = users[id];
+   *     if (!ctx.user) return ctx.status = 404;
+   *     next();
+   *   })
+   *   .get('/users/:user', function (ctx, next) {
+   *     ctx.body = ctx.user;
+   *   });
+   * ```
+   *
+   * @param {String} param
+   * @param {Function} middleware
+   * @returns {Layer}
+   * @private
+   */
+  param(param, fn) {
+    const {
+      stack
+    } = this;
+    const params = this.paramNames;
+    const middleware = function (ctx, next) {
+      return fn.call(this, ctx.params[param], ctx, next);
+    };
+    middleware.param = param;
+    const names = params.map(function (p) {
+      return p.name;
+    });
+    const x = names.indexOf(param);
+    if (x > -1) {
+      // iterate through the stack, to figure out where to place the handler fn
+      stack.some((fn, i) => {
+        // param handlers are always first, so when we find an fn w/o a param property, stop here
+        // if the param handler at this part of the stack comes after the one we are adding, stop here
+        if (!fn.param || names.indexOf(fn.param) > x) {
+          // inject this param handler right before the current item
+          stack.splice(i, 0, middleware);
+          return true; // then break the loop
+        }
+      });
+    }
+    return this;
+  }
+
+  /**
+   * Prefix route path.
+   *
+   * @param {String} prefix
+   * @returns {Layer}
+   * @private
+   */
+  // setPrefix(prefix) {
+  //   if (this.path) {
+  //     this.path =
+  //       this.path !== '/' || this.opts.strict === true
+  //         ? `${prefix}${this.path}`
+  //         : prefix;
+  //     if (this.opts.pathAsRegExp === true || prefix instanceof RegExp) {
+  //       this.regexp = new RegExp(this.path);
+  //     } else if (this.path) {
+  //       const { regexp, keys } = pathToRegexp(this.path, this.opts);
+  //       this.regexp = regexp;
+  //       this.paramNames = keys;
+  //     }
+  //   }
+
+  //   return this;
+  // }
 };
-
-/**
- * Prefix route path.
- *
- * @param {String} prefix
- * @returns {Layer}
- * @private
- */
-
-// Layer.prototype.setPrefix = function (prefix) {
-//   if (this.path) {
-//     this.path =
-//       this.path !== '/' || this.opts.strict === true
-//         ? `${prefix}${this.path}`
-//         : prefix;
-//     this.paramNames = [];
-//     this.regexp = pathToRegexp(this.path, this.paramNames, this.opts);
-//   }
-
-//   return this;
-// };
 
 /**
  * Safe decodeURIComponent, won't throw any error.
@@ -770,68 +763,642 @@ Layer$1.prototype.param = function (param, fn) {
 
 function safeDecodeURIComponent(text) {
   try {
-    return decodeURIComponent(text);
+    // TODO: take a look on `safeDecodeURIComponent` if we use it only with route params let's remove the `replace` method otherwise make it flexible.
+    // @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent#decoding_query_parameters_from_a_url
+    return decodeURIComponent(text.replace(/\+/g, ' '));
   } catch (_unused) {
     return text;
   }
 }
 
-// const { debuglog } = require('util');
+// const http = require('node:http');
 
-var compose = compose_1;
+// const debug = require('debug')('koa-router');
+
+const compose = compose_1;
 // const HttpError = require('http-errors');
-var methods = methods$1;
-require$$2.pathToRegexp;
-var Layer = layer;
+const methods = methods$1;
+// const { pathToRegexp } = require('path-to-regexp');
 
-// const debug = debuglog('koa-router');
+const Layer = layer;
+
+// const methods = http.METHODS.map((method) => method.toLowerCase());
 
 /**
  * @module koa-router
  */
+class Router {
+  /**
+   * Create a new router.
+   *
+   * @example
+   *
+   * Basic usage:
+   *
+   * ```javascript
+   * const Koa = require('koa');
+   * const Router = require('@koa/router');
+   *
+   * const app = new Koa();
+   * const router = new Router();
+   *
+   * router.get('/', (ctx, next) => {
+   *   // ctx.router available
+   * });
+   *
+   * app
+   *   .use(router.routes())
+   *   .use(router.allowedMethods());
+   * ```
+   *
+   * @alias module:koa-router
+   * @param {Object=} opts
+   * @param {Boolean=false} opts.exclusive only run last matched route's controller when there are multiple matches
+   * @param {String=} opts.prefix prefix router paths
+   * @param {String|RegExp=} opts.host host for router match
+   * @constructor
+   */
+  constructor() {
+    let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    if (!(this instanceof Router)) return new Router(opts);
+    this.opts = opts;
+    this.methods = this.opts.methods || ['HEAD', 'OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', 'DELETE'];
+    this.exclusive = Boolean(this.opts.exclusive);
+    this.params = {};
+    this.stack = [];
+    this.host = this.opts.host;
+  }
 
-var router = Router;
+  /**
+   * Generate URL from url pattern and given `params`.
+   *
+   * @example
+   *
+   * ```javascript
+   * const url = Router.url('/users/:id', {id: 1});
+   * // => "/users/1"
+   * ```
+   *
+   * @param {String} path url pattern
+   * @param {Object} params url parameters
+   * @returns {String}
+   */
+  // static url(path, ...args) {
+  //   return Layer.prototype.url.apply({ path }, args);
+  // }
 
-/**
- * Create a new router.
- *
- * @example
- *
- * Basic usage:
- *
- * ```javascript
- * const Koa = require('koa');
- * const Router = require('@koa/router');
- *
- * const app = new Koa();
- * const router = new Router();
- *
- * router.get('/', (ctx, next) => {
- *   // ctx.router available
- * });
- *
- * app
- *   .use(router.routes())
- *   .use(router.allowedMethods());
- * ```
- *
- * @alias module:koa-router
- * @param {Object=} opts
- * @param {Boolean=false} opts.exclusive only run last matched route's controller when there are multiple matches
- * @param {String=} opts.prefix prefix router paths
- * @param {String|RegExp=} opts.host host for router match
- * @constructor
- */
+  /**
+   * Use given middleware.
+   *
+   * Middleware run in the order they are defined by `.use()`. They are invoked
+   * sequentially, requests start at the first middleware and work their way
+   * "down" the middleware stack.
+   *
+   * @example
+   *
+   * ```javascript
+   * // session middleware will run before authorize
+   * router
+   *   .use(session())
+   *   .use(authorize());
+   *
+   * // use middleware only with given path
+   * router.use('/users', userAuth());
+   *
+   * // or with an array of paths
+   * router.use(['/users', '/admin'], userAuth());
+   *
+   * app.use(router.routes());
+   * ```
+   *
+   * @param {String=} path
+   * @param {Function} middleware
+   * @param {Function=} ...
+   * @returns {Router}
+   */
+  // use(...middleware) {
+  //   const router = this;
+  //   let path;
 
-function Router() {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  if (!(this instanceof Router)) return new Router(opts);
-  this.opts = opts;
-  this.methods = this.opts.methods || ['HEAD', 'OPTIONS', 'GET', 'PUT', 'PATCH', 'POST', 'DELETE'];
-  this.exclusive = Boolean(this.opts.exclusive);
-  this.params = {};
-  this.stack = [];
-  this.host = this.opts.host;
+  //   // support array of paths
+  //   if (Array.isArray(middleware[0]) && typeof middleware[0][0] === 'string') {
+  //     const arrPaths = middleware[0];
+  //     for (const p of arrPaths) {
+  //       router.use.apply(router, [p, ...middleware.slice(1)]);
+  //     }
+
+  //     return this;
+  //   }
+
+  //   const hasPath = typeof middleware[0] === 'string';
+  //   if (hasPath) path = middleware.shift();
+
+  //   for (const m of middleware) {
+  //     if (m.router) {
+  //       const cloneRouter = Object.assign(
+  //         Object.create(Router.prototype),
+  //         m.router,
+  //         {
+  //           stack: [...m.router.stack]
+  //         }
+  //       );
+
+  //       for (let j = 0; j < cloneRouter.stack.length; j++) {
+  //         const nestedLayer = cloneRouter.stack[j];
+  //         const cloneLayer = Object.assign(
+  //           Object.create(Layer.prototype),
+  //           nestedLayer
+  //         );
+
+  //         if (path) cloneLayer.setPrefix(path);
+  //         if (router.opts.prefix) cloneLayer.setPrefix(router.opts.prefix);
+  //         router.stack.push(cloneLayer);
+  //         cloneRouter.stack[j] = cloneLayer;
+  //       }
+
+  //       if (router.params) {
+  //         const routerParams = Object.keys(router.params);
+  //         for (const key of routerParams) {
+  //           cloneRouter.param(key, router.params[key]);
+  //         }
+  //       }
+  //     } else {
+  //       const { keys } = pathToRegexp(router.opts.prefix || '', router.opts);
+  //       const routerPrefixHasParam = Boolean(
+  //         router.opts.prefix && keys.length > 0
+  //       );
+  //       router.register(path || '([^/]*)', [], m, {
+  //         end: false,
+  //         ignoreCaptures: !hasPath && !routerPrefixHasParam,
+  //         pathAsRegExp: true
+  //       });
+  //     }
+  //   }
+
+  //   return this;
+  // }
+
+  /**
+   * Set the path prefix for a Router instance that was already initialized.
+   *
+   * @example
+   *
+   * ```javascript
+   * router.prefix('/things/:thing_id')
+   * ```
+   *
+   * @param {String} prefix
+   * @returns {Router}
+   */
+  // prefix(prefix) {
+  //   prefix = prefix.replace(/\/$/, '');
+
+  //   this.opts.prefix = prefix;
+
+  //   for (let i = 0; i < this.stack.length; i++) {
+  //     const route = this.stack[i];
+  //     route.setPrefix(prefix);
+  //   }
+
+  //   return this;
+  // }
+
+  /**
+   * Returns router middleware which dispatches a route matching the request.
+   *
+   * @returns {Function}
+   */
+  middleware() {
+    const router = this;
+    const dispatch = (ctx, next) => {
+      // debug('%s %s', ctx.method, ctx.path);
+
+      // const hostMatched = router.matchHost(ctx.host);
+
+      // if (!hostMatched) {
+      //   return next();
+      // }
+
+      const path = router.opts.routerPath || ctx.newRouterPath || ctx.path || ctx.routerPath;
+      const matched = router.match(path, ctx.method);
+      if (ctx.matched) {
+        ctx.matched.push.apply(ctx.matched, matched.path);
+      } else {
+        ctx.matched = matched.path;
+      }
+      ctx.router = router;
+      if (!matched.route) return next();
+      const matchedLayers = matched.pathAndMethod;
+      const mostSpecificLayer = matchedLayers[matchedLayers.length - 1];
+      ctx._matchedRoute = mostSpecificLayer.path;
+      if (mostSpecificLayer.name) {
+        ctx._matchedRouteName = mostSpecificLayer.name;
+      }
+      const layerChain = (router.exclusive ? [mostSpecificLayer] : matchedLayers).reduce((memo, layer) => {
+        memo.push((ctx, next) => {
+          ctx.captures = layer.captures(path, ctx.captures);
+          ctx.request.params = layer.params(path, ctx.captures, ctx.params);
+          ctx.params = ctx.request.params;
+          ctx.routerPath = layer.path;
+          ctx.routerName = layer.name;
+          ctx._matchedRoute = layer.path;
+          if (layer.name) {
+            ctx._matchedRouteName = layer.name;
+          }
+          return next();
+        });
+        return [...memo, ...layer.stack];
+      }, []);
+      return compose(layerChain)(ctx, next);
+    };
+    dispatch.router = this;
+    return dispatch;
+  }
+  routes() {
+    return this.middleware();
+  }
+
+  /**
+   * Returns separate middleware for responding to `OPTIONS` requests with
+   * an `Allow` header containing the allowed methods, as well as responding
+   * with `405 Method Not Allowed` and `501 Not Implemented` as appropriate.
+   *
+   * @example
+   *
+   * ```javascript
+   * const Koa = require('koa');
+   * const Router = require('@koa/router');
+   *
+   * const app = new Koa();
+   * const router = new Router();
+   *
+   * app.use(router.routes());
+   * app.use(router.allowedMethods());
+   * ```
+   *
+   * **Example with [Boom](https://github.com/hapijs/boom)**
+   *
+   * ```javascript
+   * const Koa = require('koa');
+   * const Router = require('@koa/router');
+   * const Boom = require('boom');
+   *
+   * const app = new Koa();
+   * const router = new Router();
+   *
+   * app.use(router.routes());
+   * app.use(router.allowedMethods({
+   *   throw: true,
+   *   notImplemented: () => new Boom.notImplemented(),
+   *   methodNotAllowed: () => new Boom.methodNotAllowed()
+   * }));
+   * ```
+   *
+   * @param {Object=} options
+   * @param {Boolean=} options.throw throw error instead of setting status and header
+   * @param {Function=} options.notImplemented throw the returned value in place of the default NotImplemented error
+   * @param {Function=} options.methodNotAllowed throw the returned value in place of the default MethodNotAllowed error
+   * @returns {Function}
+   */
+  // allowedMethods(options = {}) {
+  //   const implemented = this.methods;
+
+  //   return (ctx, next) => {
+  //     return next().then(() => {
+  //       const allowed = {};
+
+  //       if (ctx.matched && (!ctx.status || ctx.status === 404)) {
+  //         for (let i = 0; i < ctx.matched.length; i++) {
+  //           const route = ctx.matched[i];
+  //           for (let j = 0; j < route.methods.length; j++) {
+  //             const method = route.methods[j];
+  //             allowed[method] = method;
+  //           }
+  //         }
+
+  //         const allowedArr = Object.keys(allowed);
+  //         if (!implemented.includes(ctx.method)) {
+  //           if (options.throw) {
+  //             const notImplementedThrowable =
+  //               typeof options.notImplemented === 'function'
+  //                 ? options.notImplemented() // set whatever the user returns from their function
+  //                 : new HttpError.NotImplemented();
+
+  //             throw notImplementedThrowable;
+  //           } else {
+  //             ctx.status = 501;
+  //             ctx.set('Allow', allowedArr.join(', '));
+  //           }
+  //         } else if (allowedArr.length > 0) {
+  //           if (ctx.method === 'OPTIONS') {
+  //             ctx.status = 200;
+  //             ctx.body = '';
+  //             ctx.set('Allow', allowedArr.join(', '));
+  //           } else if (!allowed[ctx.method]) {
+  //             if (options.throw) {
+  //               const notAllowedThrowable =
+  //                 typeof options.methodNotAllowed === 'function'
+  //                   ? options.methodNotAllowed() // set whatever the user returns from their function
+  //                   : new HttpError.MethodNotAllowed();
+
+  //               throw notAllowedThrowable;
+  //             } else {
+  //               ctx.status = 405;
+  //               ctx.set('Allow', allowedArr.join(', '));
+  //             }
+  //           }
+  //         }
+  //       }
+  //     });
+  //   };
+  // }
+
+  /**
+   * Register route with all methods.
+   *
+   * @param {String} name Optional.
+   * @param {String} path
+   * @param {Function=} middleware You may also pass multiple middleware.
+   * @param {Function} callback
+   * @returns {Router}
+   */
+  // all(name, path, middleware) {
+  //   if (typeof path === 'string' || path instanceof RegExp) {
+  //     middleware = Array.prototype.slice.call(arguments, 2);
+  //   } else {
+  //     middleware = Array.prototype.slice.call(arguments, 1);
+  //     path = name;
+  //     name = null;
+  //   }
+
+  //   // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
+  //   if (
+  //     typeof path !== 'string' &&
+  //     !(path instanceof RegExp) &&
+  //     (!Array.isArray(path) || path.length === 0)
+  //   )
+  //     throw new Error('You have to provide a path when adding an all handler');
+
+  //   const opts = {
+  //     name,
+  //     pathAsRegExp: path instanceof RegExp
+  //   };
+
+  //   this.register(path, methods, middleware, { ...this.opts, ...opts });
+
+  //   return this;
+  // }
+
+  /**
+   * Redirect `source` to `destination` URL with optional 30x status `code`.
+   *
+   * Both `source` and `destination` can be route names.
+   *
+   * ```javascript
+   * router.redirect('/login', 'sign-in');
+   * ```
+   *
+   * This is equivalent to:
+   *
+   * ```javascript
+   * router.all('/login', ctx => {
+   *   ctx.redirect('/sign-in');
+   *   ctx.status = 301;
+   * });
+   * ```
+   *
+   * @param {String} source URL or route name.
+   * @param {String} destination URL or route name.
+   * @param {Number=} code HTTP status code (default: 301).
+   * @returns {Router}
+   */
+  // redirect(source, destination, code) {
+  //   // lookup source route by name
+  //   if (typeof source === 'symbol' || source[0] !== '/') {
+  //     source = this.url(source);
+  //     if (source instanceof Error) throw source;
+  //   }
+
+  //   // lookup destination route by name
+  //   if (
+  //     typeof destination === 'symbol' ||
+  //     (destination[0] !== '/' && !destination.includes('://'))
+  //   ) {
+  //     destination = this.url(destination);
+  //     if (destination instanceof Error) throw destination;
+  //   }
+
+  //   return this.all(source, (ctx) => {
+  //     ctx.redirect(destination);
+  //     ctx.status = code || 301;
+  //   });
+  // }
+
+  /**
+   * Create and register a route.
+   *
+   * @param {String} path Path string.
+   * @param {Array.<String>} methods Array of HTTP verbs.
+   * @param {Function} middleware Multiple middleware also accepted.
+   * @returns {Layer}
+   * @private
+   */
+  register(path, methods, middleware) {
+    let newOpts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    const router = this;
+    const {
+      stack
+    } = this;
+    const opts = _objectSpread2(_objectSpread2({}, this.opts), newOpts);
+    // support array of paths
+    if (Array.isArray(path)) {
+      for (const curPath of path) {
+        router.register.call(router, curPath, methods, middleware, opts);
+      }
+      return this;
+    }
+
+    // create route
+    const route = new Layer(path, methods, middleware, {
+      end: opts.end === false ? opts.end : true,
+      name: opts.name,
+      sensitive: opts.sensitive || false,
+      strict: opts.strict || false,
+      prefix: opts.prefix || '',
+      ignoreCaptures: opts.ignoreCaptures,
+      pathAsRegExp: opts.pathAsRegExp
+    });
+
+    // if parent prefix exists, add prefix to new route
+    if (this.opts.prefix) {
+      route.setPrefix(this.opts.prefix);
+    }
+
+    // add parameter middleware
+    for (let i = 0; i < Object.keys(this.params).length; i++) {
+      const param = Object.keys(this.params)[i];
+      route.param(param, this.params[param]);
+    }
+    stack.push(route);
+
+    // debug('defined route %s %s', route.methods, route.path);
+
+    return route;
+  }
+
+  /**
+   * Lookup route with given `name`.
+   *
+   * @param {String} name
+   * @returns {Layer|false}
+   */
+  // route(name) {
+  //   const routes = this.stack;
+
+  //   for (let len = routes.length, i = 0; i < len; i++) {
+  //     if (routes[i].name && routes[i].name === name) return routes[i];
+  //   }
+
+  //   return false;
+  // }
+
+  /**
+   * Generate URL for route. Takes a route name and map of named `params`.
+   *
+   * @example
+   *
+   * ```javascript
+   * router.get('user', '/users/:id', (ctx, next) => {
+   *   // ...
+   * });
+   *
+   * router.url('user', 3);
+   * // => "/users/3"
+   *
+   * router.url('user', { id: 3 });
+   * // => "/users/3"
+   *
+   * router.use((ctx, next) => {
+   *   // redirect to named route
+   *   ctx.redirect(ctx.router.url('sign-in'));
+   * })
+   *
+   * router.url('user', { id: 3 }, { query: { limit: 1 } });
+   * // => "/users/3?limit=1"
+   *
+   * router.url('user', { id: 3 }, { query: "limit=1" });
+   * // => "/users/3?limit=1"
+   * ```
+   *
+   * @param {String} name route name
+   * @param {Object} params url parameters
+   * @param {Object} [options] options parameter
+   * @param {Object|String} [options.query] query options
+   * @returns {String|Error}
+   */
+  // url(name, ...args) {
+  //   const route = this.route(name);
+  //   if (route) return route.url.apply(route, args);
+
+  //   return new Error(`No route found for name: ${String(name)}`);
+  // }
+
+  /**
+   * Match given `path` and return corresponding routes.
+   *
+   * @param {String} path
+   * @param {String} method
+   * @returns {Object.<path, pathAndMethod>} returns layers that matched path and
+   * path and method.
+   * @private
+   */
+  match(path, method) {
+    const layers = this.stack;
+    let layer;
+    const matched = {
+      path: [],
+      pathAndMethod: [],
+      route: false
+    };
+    for (let len = layers.length, i = 0; i < len; i++) {
+      layer = layers[i];
+
+      // debug('test %s %s', layer.path, layer.regexp);
+
+      if (layer.match(path)) {
+        matched.path.push(layer);
+        if (layer.methods.length === 0 || layer.methods.includes(method)) {
+          matched.pathAndMethod.push(layer);
+          if (layer.methods.length > 0) matched.route = true;
+        }
+      }
+    }
+    return matched;
+  }
+
+  /**
+   * Match given `input` to allowed host
+   * @param {String} input
+   * @returns {boolean}
+   */
+  // matchHost(input) {
+  //   const { host } = this;
+
+  //   if (!host) {
+  //     return true;
+  //   }
+
+  //   if (!input) {
+  //     return false;
+  //   }
+
+  //   if (typeof host === 'string') {
+  //     return input === host;
+  //   }
+
+  //   if (typeof host === 'object' && host instanceof RegExp) {
+  //     return host.test(input);
+  //   }
+  // }
+
+  /**
+   * Run middleware for named route parameters. Useful for auto-loading or
+   * validation.
+   *
+   * @example
+   *
+   * ```javascript
+   * router
+   *   .param('user', (id, ctx, next) => {
+   *     ctx.user = users[id];
+   *     if (!ctx.user) return ctx.status = 404;
+   *     return next();
+   *   })
+   *   .get('/users/:user', ctx => {
+   *     ctx.body = ctx.user;
+   *   })
+   *   .get('/users/:user/friends', ctx => {
+   *     return ctx.user.getFriends().then(function(friends) {
+   *       ctx.body = friends;
+   *     });
+   *   })
+   *   // /users/3 => {"id": 3, "name": "Alex"}
+   *   // /users/3/friends => [{"id": 4, "name": "TJ"}]
+   * ```
+   *
+   * @param {String} param
+   * @param {Function} middleware
+   * @returns {Router}
+   */
+  // param(param, middleware) {
+  //   this.params[param] = middleware;
+  //   for (let i = 0; i < this.stack.length; i++) {
+  //     const route = this.stack[i];
+  //     route.param(param, middleware);
+  //   }
+
+  //   return this;
+  // }
 }
 
 /**
@@ -972,7 +1539,7 @@ function Router() {
  * @param {Function} callback route callback
  * @returns {Router}
  */
-var _loop = function _loop() {
+for (const method_ of methods) {
   function setMethodVerb(method) {
     Router.prototype[method] = function (name, path, middleware) {
       if (typeof path === 'string' || path instanceof RegExp) {
@@ -985,519 +1552,26 @@ var _loop = function _loop() {
 
       // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
       if (typeof path !== 'string' && !(path instanceof RegExp) && (!Array.isArray(path) || path.length === 0)) throw new Error("You have to provide a path when adding a ".concat(method, " handler"));
-      this.register(path, [method], middleware, {
-        name: name
-      });
+      const opts = {
+        name,
+        pathAsRegExp: path instanceof RegExp
+      };
+
+      // pass opts to register call on verb methods
+      this.register(path, [method], middleware, _objectSpread2(_objectSpread2({}, this.opts), opts));
       return this;
     };
   }
   setMethodVerb(method_);
-};
-for (var method_ of methods) {
-  _loop();
 }
 
 // Alias for `router.delete()` because delete is a reserved word
-// eslint-disable-next-line dot-notation
+
 Router.prototype.del = Router.prototype['delete'];
 Router.prototype.verb = function (method, pathToMath, action) {
-  var verb = method.toUpperCase();
+  const verb = method.toUpperCase();
   this[verb](pathToMath, action);
 };
-
-/**
- * Use given middleware.
- *
- * Middleware run in the order they are defined by `.use()`. They are invoked
- * sequentially, requests start at the first middleware and work their way
- * "down" the middleware stack.
- *
- * @example
- *
- * ```javascript
- * // session middleware will run before authorize
- * router
- *   .use(session())
- *   .use(authorize());
- *
- * // use middleware only with given path
- * router.use('/users', userAuth());
- *
- * // or with an array of paths
- * router.use(['/users', '/admin'], userAuth());
- *
- * app.use(router.routes());
- * ```
- *
- * @param {String=} path
- * @param {Function} middleware
- * @param {Function=} ...
- * @returns {Router}
- */
-
-// Router.prototype.use = function () {
-//   const router = this;
-//   const middleware = Array.prototype.slice.call(arguments);
-//   let path;
-
-//   // support array of paths
-//   if (Array.isArray(middleware[0]) && typeof middleware[0][0] === 'string') {
-//     const arrPaths = middleware[0];
-//     for (const p of arrPaths) {
-//       router.use.apply(router, [p].concat(middleware.slice(1)));
-//     }
-
-//     return this;
-//   }
-
-//   const hasPath = typeof middleware[0] === 'string';
-//   if (hasPath) path = middleware.shift();
-
-//   for (const m of middleware) {
-//     if (m.router) {
-//       const cloneRouter = Object.assign(
-//         Object.create(Router.prototype),
-//         m.router,
-//         {
-//           stack: [...m.router.stack]
-//         }
-//       );
-
-//       for (let j = 0; j < cloneRouter.stack.length; j++) {
-//         const nestedLayer = cloneRouter.stack[j];
-//         const cloneLayer = Object.assign(
-//           Object.create(Layer.prototype),
-//           nestedLayer
-//         );
-
-//         if (path) cloneLayer.setPrefix(path);
-//         if (router.opts.prefix) cloneLayer.setPrefix(router.opts.prefix);
-//         router.stack.push(cloneLayer);
-//         cloneRouter.stack[j] = cloneLayer;
-//       }
-
-//       if (router.params) {
-//         function setRouterParams(paramArr) {
-//           const routerParams = paramArr;
-//           for (const key of routerParams) {
-//             cloneRouter.param(key, router.params[key]);
-//           }
-//         }
-
-//         setRouterParams(Object.keys(router.params));
-//       }
-//     } else {
-//       const keys = [];
-//       pathToRegexp(router.opts.prefix || '', keys);
-//       const routerPrefixHasParam = router.opts.prefix && keys.length;
-//       router.register(path || '([^/]*)', [], m, {
-//         end: false,
-//         ignoreCaptures: !hasPath && !routerPrefixHasParam
-//       });
-//     }
-//   }
-
-//   return this;
-// };
-
-/**
- * Set the path prefix for a Router instance that was already initialized.
- *
- * @example
- *
- * ```javascript
- * router.prefix('/things/:thing_id')
- * ```
- *
- * @param {String} prefix
- * @returns {Router}
- */
-
-// Router.prototype.prefix = function (prefix) {
-//   prefix = prefix.replace(/\/$/, '');
-
-//   this.opts.prefix = prefix;
-
-//   for (let i = 0; i < this.stack.length; i++) {
-//     const route = this.stack[i];
-//     route.setPrefix(prefix);
-//   }
-
-//   return this;
-// };
-
-/**
- * Returns router middleware which dispatches a route matching the request.
- *
- * @returns {Function}
- */
-
-Router.prototype.routes = Router.prototype.middleware = function () {
-  var router = this;
-  var dispatch = function dispatch(ctx, next) {
-    // debug('%s %s', ctx.method, ctx.path);
-
-    // const hostMatched = router.matchHost(ctx.host);
-
-    // if (!hostMatched) {
-    //   return next();
-    // }
-
-    var path = router.opts.routerPath || ctx.routerPath || ctx.path;
-    var matched = router.match(path, ctx.method);
-    var layerChain;
-    if (ctx.matched) {
-      ctx.matched.push.apply(ctx.matched, matched.path);
-    } else {
-      ctx.matched = matched.path;
-    }
-    ctx.router = router;
-    if (!matched.route) return next();
-    var matchedLayers = matched.pathAndMethod;
-    var mostSpecificLayer = matchedLayers[matchedLayers.length - 1];
-    ctx._matchedRoute = mostSpecificLayer.path;
-    if (mostSpecificLayer.name) {
-      ctx._matchedRouteName = mostSpecificLayer.name;
-    }
-    layerChain = (router.exclusive ? [mostSpecificLayer] : matchedLayers).reduce(function (memo, layer) {
-      memo.push(function (ctx, next) {
-        ctx.captures = layer.captures(path, ctx.captures);
-        ctx.params = ctx.request.params = layer.params(path, ctx.captures, ctx.params);
-        ctx.routerPath = layer.path;
-        ctx.routerName = layer.name;
-        ctx._matchedRoute = layer.path;
-        if (layer.name) {
-          ctx._matchedRouteName = layer.name;
-        }
-        return next();
-      });
-      return memo.concat(layer.stack);
-    }, []);
-    return compose(layerChain)(ctx, next);
-  };
-  dispatch.router = this;
-  return dispatch;
-};
-
-/**
- * Returns separate middleware for responding to `OPTIONS` requests with
- * an `Allow` header containing the allowed methods, as well as responding
- * with `405 Method Not Allowed` and `501 Not Implemented` as appropriate.
- *
- * @example
- *
- * ```javascript
- * const Koa = require('koa');
- * const Router = require('@koa/router');
- *
- * const app = new Koa();
- * const router = new Router();
- *
- * app.use(router.routes());
- * app.use(router.allowedMethods());
- * ```
- *
- * **Example with [Boom](https://github.com/hapijs/boom)**
- *
- * ```javascript
- * const Koa = require('koa');
- * const Router = require('@koa/router');
- * const Boom = require('boom');
- *
- * const app = new Koa();
- * const router = new Router();
- *
- * app.use(router.routes());
- * app.use(router.allowedMethods({
- *   throw: true,
- *   notImplemented: () => new Boom.notImplemented(),
- *   methodNotAllowed: () => new Boom.methodNotAllowed()
- * }));
- * ```
- *
- * @param {Object=} options
- * @param {Boolean=} options.throw throw error instead of setting status and header
- * @param {Function=} options.notImplemented throw the returned value in place of the default NotImplemented error
- * @param {Function=} options.methodNotAllowed throw the returned value in place of the default MethodNotAllowed error
- * @returns {Function}
- */
-
-// Router.prototype.allowedMethods = function (options = {}) {
-//   const implemented = this.methods;
-
-//   return function allowedMethods(ctx, next) {
-//     return next().then(function () {
-//       const allowed = {};
-
-//       if (!ctx.status || ctx.status === 404) {
-//         for (let i = 0; i < ctx.matched.length; i++) {
-//           const route = ctx.matched[i];
-//           for (let j = 0; j < route.methods.length; j++) {
-//             const method = route.methods[j];
-//             allowed[method] = method;
-//           }
-//         }
-
-//         const allowedArr = Object.keys(allowed);
-
-//         if (!~implemented.indexOf(ctx.method)) {
-//           if (options.throw) {
-//             const notImplementedThrowable =
-//               typeof options.notImplemented === 'function'
-//                 ? options.notImplemented() // set whatever the user returns from their function
-//                 : new HttpError.NotImplemented();
-
-//             throw notImplementedThrowable;
-//           } else {
-//             ctx.status = 501;
-//             ctx.set('Allow', allowedArr.join(', '));
-//           }
-//         } else if (allowedArr.length > 0) {
-//           if (ctx.method === 'OPTIONS') {
-//             ctx.status = 200;
-//             ctx.body = '';
-//             ctx.set('Allow', allowedArr.join(', '));
-//           } else if (!allowed[ctx.method]) {
-//             if (options.throw) {
-//               const notAllowedThrowable =
-//                 typeof options.methodNotAllowed === 'function'
-//                   ? options.methodNotAllowed() // set whatever the user returns from their function
-//                   : new HttpError.MethodNotAllowed();
-
-//               throw notAllowedThrowable;
-//             } else {
-//               ctx.status = 405;
-//               ctx.set('Allow', allowedArr.join(', '));
-//             }
-//           }
-//         }
-//       }
-//     });
-//   };
-// };
-
-/**
- * Register route with all methods.
- *
- * @param {String} name Optional.
- * @param {String} path
- * @param {Function=} middleware You may also pass multiple middleware.
- * @param {Function} callback
- * @returns {Router}
- */
-
-// Router.prototype.all = function (name, path, middleware) {
-//   if (typeof path === 'string') {
-//     middleware = Array.prototype.slice.call(arguments, 2);
-//   } else {
-//     middleware = Array.prototype.slice.call(arguments, 1);
-//     path = name;
-//     name = null;
-//   }
-
-//   // Sanity check to ensure we have a viable path candidate (eg: string|regex|non-empty array)
-//   if (
-//     typeof path !== 'string' &&
-//     !(path instanceof RegExp) &&
-//     (!Array.isArray(path) || path.length === 0)
-//   )
-//     throw new Error('You have to provide a path when adding an all handler');
-
-//   this.register(path, methods, middleware, { name });
-
-//   return this;
-// };
-
-/**
- * Redirect `source` to `destination` URL with optional 30x status `code`.
- *
- * Both `source` and `destination` can be route names.
- *
- * ```javascript
- * router.redirect('/login', 'sign-in');
- * ```
- *
- * This is equivalent to:
- *
- * ```javascript
- * router.all('/login', ctx => {
- *   ctx.redirect('/sign-in');
- *   ctx.status = 301;
- * });
- * ```
- *
- * @param {String} source URL or route name.
- * @param {String} destination URL or route name.
- * @param {Number=} code HTTP status code (default: 301).
- * @returns {Router}
- */
-
-// Router.prototype.redirect = function (source, destination, code) {
-//   // lookup source route by name
-//   if (typeof source === 'symbol' || source[0] !== '/') {
-//     source = this.url(source);
-//     if (source instanceof Error) throw source;
-//   }
-
-//   // lookup destination route by name
-//   if (
-//     typeof destination === 'symbol' ||
-//     (destination[0] !== '/' && !destination.includes('://'))
-//   ) {
-//     destination = this.url(destination);
-//     if (destination instanceof Error) throw destination;
-//   }
-
-//   return this.all(source, (ctx) => {
-//     ctx.redirect(destination);
-//     ctx.status = code || 301;
-//   });
-// };
-
-/**
- * Create and register a route.
- *
- * @param {String} path Path string.
- * @param {Array.<String>} methods Array of HTTP verbs.
- * @param {Function} middleware Multiple middleware also accepted.
- * @returns {Layer}
- * @private
- */
-
-Router.prototype.register = function (path, methods, middleware) {
-  var opts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var router = this;
-  var stack = this.stack;
-
-  // support array of paths
-  if (Array.isArray(path)) {
-    for (var curPath of path) {
-      router.register.call(router, curPath, methods, middleware, opts);
-    }
-    return this;
-  }
-
-  // create route
-  var route = new Layer(path, methods, middleware, {
-    end: opts.end === false ? opts.end : true,
-    name: opts.name,
-    sensitive: opts.sensitive || this.opts.sensitive || false,
-    strict: opts.strict || this.opts.strict || false,
-    prefix: opts.prefix || this.opts.prefix || '',
-    ignoreCaptures: opts.ignoreCaptures
-  });
-  if (this.opts.prefix) {
-    route.setPrefix(this.opts.prefix);
-  }
-
-  // add parameter middleware
-  for (var i = 0; i < Object.keys(this.params).length; i++) {
-    var param = Object.keys(this.params)[i];
-    route.param(param, this.params[param]);
-  }
-  stack.push(route);
-
-  // debug('defined route %s %s', route.methods, route.path);
-
-  return route;
-};
-
-/**
- * Lookup route with given `name`.
- *
- * @param {String} name
- * @returns {Layer|false}
- */
-
-// Router.prototype.route = function (name) {
-//   const routes = this.stack;
-
-//   for (let len = routes.length, i = 0; i < len; i++) {
-//     if (routes[i].name && routes[i].name === name) return routes[i];
-//   }
-
-//   return false;
-// };
-
-/**
- * Generate URL for route. Takes a route name and map of named `params`.
- *
- * @example
- *
- * ```javascript
- * router.get('user', '/users/:id', (ctx, next) => {
- *   // ...
- * });
- *
- * router.url('user', 3);
- * // => "/users/3"
- *
- * router.url('user', { id: 3 });
- * // => "/users/3"
- *
- * router.use((ctx, next) => {
- *   // redirect to named route
- *   ctx.redirect(ctx.router.url('sign-in'));
- * })
- *
- * router.url('user', { id: 3 }, { query: { limit: 1 } });
- * // => "/users/3?limit=1"
- *
- * router.url('user', { id: 3 }, { query: "limit=1" });
- * // => "/users/3?limit=1"
- * ```
- *
- * @param {String} name route name
- * @param {Object} params url parameters
- * @param {Object} [options] options parameter
- * @param {Object|String} [options.query] query options
- * @returns {String|Error}
- */
-
-// Router.prototype.url = function (name, params) {
-//   const route = this.route(name);
-
-//   if (route) {
-//     const args = Array.prototype.slice.call(arguments, 1);
-//     return route.url.apply(route, args);
-//   }
-
-//   return new Error(`No route found for name: ${String(name)}`);
-// };
-
-/**
- * Match given `path` and return corresponding routes.
- *
- * @param {String} path
- * @param {String} method
- * @returns {Object.<path, pathAndMethod>} returns layers that matched path and
- * path and method.
- * @private
- */
-
-Router.prototype.match = function (path, method) {
-  var layers = this.stack;
-  var layer;
-  var matched = {
-    path: [],
-    pathAndMethod: [],
-    route: false
-  };
-  for (var len = layers.length, i = 0; i < len; i++) {
-    layer = layers[i];
-
-    // debug('test %s %s', layer.path, layer.regexp);
-
-    // eslint-disable-next-line unicorn/prefer-regexp-test
-    if (layer.match(path)) {
-      matched.path.push(layer);
-      if (layer.methods.length === 0 || ~layer.methods.indexOf(method)) {
-        matched.pathAndMethod.push(layer);
-        if (layer.methods.length > 0) matched.route = true;
-      }
-    }
-  }
-  return matched;
-};
+var router = Router;
 
 module.exports = router;
