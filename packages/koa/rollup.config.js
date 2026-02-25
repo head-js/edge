@@ -38,7 +38,7 @@ export default [
     ],
 
     output: [
-      { file: 'dist/application.js', format: 'cjs' },
+      { file: 'dist/application.js', format: 'esm' },
     ],
   },
 ];
